@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-いろいろな事柄を公開していい来ます。
+いろいろな事柄を公開していきますよ。
 
 This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/)
 
