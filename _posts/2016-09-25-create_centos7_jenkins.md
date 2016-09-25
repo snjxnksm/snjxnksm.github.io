@@ -2,10 +2,12 @@
 layput: post
 title: Centos7でJenkinsサーバをたてる。
 ---
-
-
 ローカルPCにcentos7サーバを立てて、GUI環境を作る手順をメモする。
 ついでにjenkinsをインストールする手順もおまけ。
+
+* TOC
+{:toc}
+
 
 ## 仮想機の用意
 
