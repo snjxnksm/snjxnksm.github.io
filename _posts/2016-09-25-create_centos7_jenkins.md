@@ -2,6 +2,8 @@
 layput: post
 title: Centos7でJenkinsサーバをたてる。
 ---
+
+
 ローカルPCにcentos7サーバを立てて、GUI環境を作る手順をメモする。
 ついでにjenkinsをインストールする手順もおまけ。
 
@@ -28,13 +30,13 @@ virtualbox->Jenkins(VM)->設定->ネットワーク（アダプタ１）（高�
 ## 実行環境インストール
 
 1. GUI  
-```
+``` bash
 sudo yum -y groupinstall "Server with GUI"
 (けっこう時間がかかる)
 sudo yum -y install alacarte
 ```  
 2. 日本語環境  
-```
+``` bash
 localectl set-locale LANG=ja_JP.UTF-8
 systemctl set-default graphical.target
 ```

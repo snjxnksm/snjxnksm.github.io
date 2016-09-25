@@ -27,3 +27,9 @@ markdown: kramdown
 theme: minima
 
 local: ja-jp
+
+gems:
+    - jemoji
+    - jekyll-redirect-from
+    - jekyll-sitemap
+    - jekyll-feed
