@@ -2,8 +2,8 @@
 layout: default
 title: Centos7でJenkinsサーバをたてる。
 ---
-ローカルPCにcentos7サーバを立てて、GUI環境を作る手順をメモする。
-ついでにjenkinsをインストールする手順もおまけ。
+ローカルPCにcentos7サーバを立てて、GUI環境を作る手順をメモする。  
+ついでにjenkinsをインストールする手順もおまけ。  
 
 * TOC
 {:toc}
@@ -11,12 +11,12 @@ title: Centos7でJenkinsサーバをたてる。
 
 ## 仮想機の用意
 
-前提としてvirtualboxをインストールすること。
+前提としてvirtualboxをインストールすること。  
 
 * centos7  
 https://www.centos.org/download/  
-CentOS-7-x86_64-DVD-1511.iso
-（実行時の最新を利用すれば問題なし）
+CentOS-7-x86_64-DVD-1511.iso  
+（実行時の最新を利用すれば問題なし）  
 
 * ポートフォワーディングルールを設定しておくこと  
 外部から仮想機のjenkinsをたたくために以下の設定をする。  
@@ -29,16 +29,15 @@ virtualbox->Jenkins(VM)->設定->ネットワーク（アダプタ１）（高�
 
 
 
-## 実行環境インストール
+## 実行環境インストール  
 
 1. GUI  
-``` bash
+```
 sudo yum -y groupinstall "Server with GUI"
-(けっこう時間がかかる)
 sudo yum -y install alacarte
 ```  
 2. 日本語環境  
-``` bash
+```
 localectl set-locale LANG=ja_JP.UTF-8
 systemctl set-default graphical.target
 ```
@@ -53,24 +52,16 @@ reboot
 ```
 5. ユーザ作成  
 shinjinakashima/shinjinakashimaで作成  
-6. Guest Addtionsのインストール  
-  61. 実行環境インストール
-  ```
-  yum -y install epel-release
-  yum install -y bzip2 gcc make kernel-devel kernel-headers dkms gcc-c++
-  ```
-  62. GuestAdditionsインストール
-      VMのメニュー→デバイス→GuestAdditionsCDイメージの挿入  
+61. 実行環境インストール  
+```
+yum -y install epel-release
+yum install -y bzip2 gcc make kernel-devel kernel-headers dkms gcc-c++
+```
+62. GuestAdditionsインストール  
+    VMのメニュー→デバイス→GuestAdditionsCDイメージの挿入  
 7. gitインストール
 ```
 yum install git -y
-```
-
-
-* 番外：gui不要の場合
-```
-systemctl set-default multi-user.target
-reboot
 ```
 
 ## Jenkins インストール
@@ -99,30 +90,30 @@ jenkinsのリポジトリを登録する。
 # sudo systemctl start jenkins
 ```
 6. 管理者ユーザの設定  
-まず管理者ユーザを作ったうえでanonymousでは何もできないようにしておく。  
-  1. ログイン認証の追加
+  まず管理者ユーザを作ったうえでanonymousでは何もできないようにしておく。  
+  1. ログイン認証の追加  
     11. Jenkinsの管理＞グローバルセキュリティの設定  
-  「セキュリティを有効化」にチェック  
+      「セキュリティを有効化」にチェック  
     12. アクセス制御＞ユーザー情報＞「Jenkins のユーザーデータベース」、「ユーザーにサインアップを許可」にチェック  
     13. アクセス制御＞管理権限＞「ログイン済みユーザーに許可」にチェック  
     14. 保存 (トップ画面に戻される)  
-  2. ユーザ作成
-    21. Jenkinsのトップ＞「Jenkinsの管理」＞「ユーザの管理」＞「ユーザ作成」
-    22. 「ユーザー名」、「パスワード」、「パスワードの確認」、「フルネーム」、「メールアドレス」を入力して、サインアップ
-  3. 権限付与
-    31. Jenkinsの管理＞グローバルセキュリティの設定
-    32. アクセス制御＞ユーザー情報＞「ユーザーにサインアップを許可」　のチェックオフ
-    33. アクセス制御＞ユーザー情報＞管理権限＞「行列による権限設定」 にチェック
-    34. 登録済みユーザー名(自分)を入力して、追加
-    35. ユーザー名(自分) の行のチェックを全てオン
-    36. 匿名ユーザー の行のチェックを全てオフ
-7. プラグインの登録
-Jenkinsのトップ＞「Jenkinsの管理」＞「プラグインの管理」
-  * Gradle plugin 追加
-  * scm-api plugin 追加
-  * Git plugin 追加
-  * PegDown Formatter Plugin 追加
-  * Publish Over SSH Plugin 追加
+  2. ユーザ作成  
+    21. Jenkinsのトップ＞「Jenkinsの管理」＞「ユーザの管理」＞「ユーザ作成」  
+    22. 「ユーザー名」、「パスワード」、「パスワードの確認」、「フルネーム」、「メールアドレス」を入力して、サインアップ  
+  3. 権限付与  
+    31. Jenkinsの管理＞グローバルセキュリティの設定  
+    32. アクセス制御＞ユーザー情報＞「ユーザーにサインアップを許可」　のチェックオフ  
+    33. アクセス制御＞ユーザー情報＞管理権限＞「行列による権限設定」 にチェック  
+    34. 登録済みユーザー名(自分)を入力して、追加  
+    35. ユーザー名(自分) の行のチェックを全てオン  
+    36. 匿名ユーザー の行のチェックを全てオフ  
+7. プラグインの登録  
+  Jenkinsのトップ＞「Jenkinsの管理」＞「プラグインの管理」  
+  * Gradle plugin 追加  
+  * scm-api plugin 追加  
+  * Git plugin 追加  
+  * PegDown Formatter Plugin 追加  
+  * Publish Over SSH Plugin 追加  
 
 
 * windowsでやる場合は[bitnami版AllInOne](https://bitnami.com/stack/jenkins/installer#windows)などあります。
