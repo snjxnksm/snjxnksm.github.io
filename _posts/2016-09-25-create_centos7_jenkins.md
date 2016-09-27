@@ -1,5 +1,5 @@
 ---
-layput: default
+layout: default
 title: Centos7でJenkinsサーバをたてる。
 ---
 ローカルPCにcentos7サーバを立てて、GUI環境を作る手順をメモする。
