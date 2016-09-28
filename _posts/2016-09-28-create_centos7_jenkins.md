@@ -1,7 +1,13 @@
 ---
-layout: default
+layout: post
 title: Centos7でJenkinsサーバをたてる。
+categories:
+  - Linux
+  - Centos7
+  - Jenkins
 ---
+# Jenkins君
+
 ローカルPCにcentos7サーバを立てて、GUI環境を作る手順をメモする。  
 ついでにjenkinsをインストールする手順もおまけ。  
 

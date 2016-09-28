@@ -25,7 +25,7 @@ github_username:  snjxnksm
 # Build settings
 markdown: kramdown
 theme: minima
-
+permalink: /blog/:categories/:title.html
 local: ja-jp
 
 gems:
