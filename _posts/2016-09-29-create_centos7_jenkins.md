@@ -39,10 +39,10 @@ virtualbox->Jenkins(VM)->設定->ネットワーク（アダプタ１）（高�
 ## 実行環境インストール  
 
 1. GUI  
-~~~~~~
+```
 sudo yum -y groupinstall "Server with GUI"
 sudo yum -y install alacarte
-~~~~~~
+```
 2. 日本語環境  
 ~~~~~~
 localectl set-locale LANG=ja_JP.UTF-8
