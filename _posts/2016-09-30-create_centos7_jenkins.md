@@ -44,26 +44,26 @@ sudo yum -y groupinstall "Server with GUI"
 sudo yum -y install alacarte
 ```
 2. 日本語環境  
-~~~~~~
+~~~
 localectl set-locale LANG=ja_JP.UTF-8
 systemctl set-default graphical.target
-~~~~~~
+~~~
 3. Java  
-~~~~~~
+~~~
 yum install java-1.8.0-openjdk
 yum install java-1.8.0-openjdk-devel
-~~~~~~
+~~~
 4. 再起動  
-~~~~~~
+~~~
 reboot
-~~~~~~
+~~~
 5. ユーザ作成  
 shinjinakashima/shinjinakashimaで作成  
 61. 実行環境インストール  
-~~~~~~
+~~~
 yum -y install epel-release
 yum install -y bzip2 gcc make kernel-devel kernel-headers dkms gcc-c++
-~~~~~~
+~~~
 62. GuestAdditionsインストール  
     VMのメニュー→デバイス→GuestAdditionsCDイメージの挿入  
 7. gitインストール
@@ -77,25 +77,25 @@ yum install git -y
 
 1. yumの準備  
 jenkinsのリポジトリを登録する。
-~~~~~~
+~~~
 # wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
 # rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
-~~~~~~
+~~~
 2. jenkinsをインストール
-~~~~~~
+~~~
 # sudo yum -y install jenkins
 # chkconfig jenkins on
-~~~~~~
+~~~
 3. ポートの変更  
 デフォルトだと8080なので、他のサービスとバッティングする場合は、以下を修正する。  
-~~~~~~
+~~~
 # vi /etc/sysconfig/jenkins
 このなかの、JENKINS_PORTを 8080 から 8081 に変更する。
-~~~~~~
+~~~
 4. jenkins起動
-~~~~~~
+~~~
 # sudo systemctl start jenkins
-~~~~~~
+~~~
 6. 管理者ユーザの設定  
   まず管理者ユーザを作ったうえでanonymousでは何もできないようにしておく。  
   1. ログイン認証の追加  
