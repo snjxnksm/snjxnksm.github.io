@@ -67,20 +67,18 @@ https://www.centos.org/download/
     52. 管理ユーザの作成も実行しておく。
 6. インストールが終了したら「再起動(R)」
 7. 再起動したら　License の同意をする。
-8. 再起動した直後はネットワークがオフになっている。
-    まずはネットワークを接続すること。GUIをインストールしたら
+8. 再起動した直後は *ネットワークがオフ* になっている。
+    まずはネットワークを接続すること。GUIをインストールしたら設定画面から辿れる。  
 
 # 実行環境インストール  
-
-
 
 1. GUI  
     以下は、Centos7インストーラで「サーバ(GUI使用)」を選択した場合と同等の作業。  
     結構時間がかかる。  
-    ```
+    <pre>
     sudo yum -y groupinstall "Server with GUI"
     sudo yum -y install alacarte
-    ```
+    </pre>
 2.  Java  
     以下は、Centos7インストーラで「Javaプラットフォーム」アドオンを選択した場合と同等の作業。
     jenkinsを走らせるのに必要。
@@ -119,13 +117,13 @@ https://www.centos.org/download/
 * 実行するかどうか聞かれるので実行する。
 * 無事に実行できたら、再起動
 
-
 # Jenkins インストール
 
 以下の手順は、Jenkins単体で動作させる場合。
 
 ##  yumの準備  
 jenkinsのリポジトリを登録する。  
+rootで実行すること。  
 
 <pre>
 # wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
@@ -135,57 +133,60 @@ jenkinsのリポジトリを登録する。
 ##  jenkinsをインストール  
 
 <pre>
-# sudo yum -y install jenkins
+# yum -y install jenkins
 # chkconfig jenkins on
-</pre>
-
-##  ポートの変更  
-デフォルトだと8080なので、他のサービスとバッティングする場合は、以下を修正する。  
-
-<pre>
-# vi /etc/sysconfig/jenkins
-このなかの、JENKINS_PORTを 8080 から 8081 に変更する。
 </pre>
 
 ##  jenkins起動  
 
 <pre>
-# sudo systemctl start jenkins
+# systemctl start jenkins
 </pre>
 
 ##  管理者ユーザの設定  
-  まず管理者ユーザを作ったうえでanonymousでは何もできないようにしておく。  
-  1. ログイン認証の追加  
-    11. Jenkinsの管理＞グローバルセキュリティの設定  
-      「セキュリティを有効化」にチェック  
-    12. アクセス制御＞ユーザー情報＞「Jenkins のユーザーデータベース」、「ユーザーにサインアップを許可」にチェック  
-    13. アクセス制御＞管理権限＞「ログイン済みユーザーに許可」にチェック  
-    14. 保存 (トップ画面に戻される)  
-  2. ユーザ作成  
-    21. Jenkinsのトップ＞「Jenkinsの管理」＞「ユーザの管理」＞「ユーザ作成」  
-    22. 「ユーザー名」、「パスワード」、「パスワードの確認」、「フルネーム」、「メールアドレス」を入力して、サインアップ  
-  3. 権限付与  
-    31. Jenkinsの管理＞グローバルセキュリティの設定  
-    32. アクセス制御＞ユーザー情報＞「ユーザーにサインアップを許可」　のチェックオフ  
-    33. アクセス制御＞ユーザー情報＞管理権限＞「行列による権限設定」 にチェック  
-    34. 登録済みユーザー名(自分)を入力して、追加  
-    35. ユーザー名(自分) の行のチェックを全てオン  
-    36. 匿名ユーザー の行のチェックを全てオフ  
+
+ここまでの作業で、8080ポートにてjenkinsが動作しているはず。  
+バンドルされているfirefoxなどのブラウザで http://localhost:8080 にログインすると、権限を設定せよという画面出てくる。  
+Administrator Password欄に、画面に指示されているファイルの中身を入力する。  
+そのあとは初期設定を実行する。
+初期設定画面では、プラグインの指定と全権管理者を設定する。
 
 ##  プラグインの登録  
-  Jenkinsのトップ＞「Jenkinsの管理」＞「プラグインの管理」  
-  * Gradle plugin 追加  
-  * scm-api plugin 追加  
-  * Git plugin 追加  
-  * PegDown Formatter Plugin 追加  
-  * Publish Over SSH Plugin 追加  
+Jenkinsのトップ＞「Jenkinsの管理」＞「プラグインの管理」  
+* Gradle plugin 追加  
+* scm-api plugin 追加  
+* Git plugin 追加  
+* PegDown Formatter Plugin 追加  
+* Publish Over SSH Plugin 追加  
 
-# ポートフォワーディングルールを設定しておくこと  
 
-  ホストマシンから、virtualbox内の仮想マシンのjenkinsをたたくために以下の設定をする。  
-  virtualbox->Jenkins(VM)->設定->ネットワーク（アダプタ１）（高度）->ポートフォワーディング  
 
-  |名前|プロトコル|ホストIP|ホストポート|ゲストIP |ゲストポート|
-  |---|---|---|---|---|---|
-  |jenkins|TCP|(空白) |8081|(空白) |8081|
-  |ssh|TCP|(空白) |22|(空白) |22|
+# 外部のマシンのブラウザで仮想マシンのJenkinsを覗く設定  
+
+以下の設定を施すと、外部から仮想マシンの8080ポートを覗けるようになる。
+
+## 仮想マシンにfirewallをインストールする。
+
+0. firewall をインストール
+    <pre>
+    yum install -y firewall
+    </pre>
+1. firewall を有効化  
+    <pre>
+    systemctl enable firewalld
+    systemctl start firewalld
+    </pre>
+2. ポートを開ける  
+    <pre>
+    firewall-cmd --add-port=8080/tcp --zone=public --permanent
+    firewall-cmd --reload
+    firewall-cmd --list-ports --zone=public
+    </pre>
+
+## ポートフォワーディングの設定をする。  
+
+virtualbox->Jenkins(VM)->設定->ネットワーク（アダプタ１）（高度）->ポートフォワーディング  
+
+|名前|プロトコル|ホストIP|ホストポート|ゲストIP |ゲストポート|
+|---|---|---|---|---|---|
+|jenkins|TCP|(空白) |8080|(空白) |8080|
