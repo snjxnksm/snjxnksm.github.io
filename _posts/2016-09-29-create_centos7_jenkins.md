@@ -76,10 +76,11 @@ https://www.centos.org/download/
 
 1. GUI  
     以下は、Centos7インストーラで「サーバ(GUI使用)」を選択した場合と同等の作業。  
-    <pre>
+    結構時間がかかる。  
+    ```
     sudo yum -y groupinstall "Server with GUI"
     sudo yum -y install alacarte
-    </pre>
+    ```
 2.  Java  
     以下は、Centos7インストーラで「Javaプラットフォーム」アドオンを選択した場合と同等の作業。
     jenkinsを走らせるのに必要。
