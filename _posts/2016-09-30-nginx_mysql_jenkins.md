@@ -13,8 +13,12 @@ categories:
 
 # はじめに
 
-centos7にnginxを入れて、外部からアクセスできるようにする。  
+centos7にnginx、jenkinsを入れて外部からアクセスできるようにする。  
 その過程で、systemctlとfirewallの簡単な取り扱いを記述する。  
+
+jenkinsは、サブディレクトリで以下のようにアクセスできるようにする。  
+`http://example.com/jenkins`
+
 想定は、最低限のセットアップはされていて、SSH接続は可能であり、root権限を持っているサーバを対象とする。
 
 # yumの準備
