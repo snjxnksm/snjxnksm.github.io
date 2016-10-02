@@ -19,7 +19,7 @@ github_username:  snjxnksm
 markdown: kramdown
 kramdown:
   input: GFM
-  hard_wrap: true
+
 theme: minima
 permalink: /blog/:categories/:title.html
 local: ja-jp
