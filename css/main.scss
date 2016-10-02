@@ -51,3 +51,19 @@ $on-laptop:        800px;
         "layout",
         "syntax-highlighting"
 ;
+
+// table border
+table, td, th {
+border: thin #828282 solid;
+}
+
+// add underline to header
+h1 {
+	padding: .25em 0 .5em .75em;
+	border-left: 6px solid #ccc;
+	border-bottom: 1px solid #ccc;
+}
+h2 {
+	padding-bottom: .5em;
+	border-bottom: 1px solid #ccc;
+}
