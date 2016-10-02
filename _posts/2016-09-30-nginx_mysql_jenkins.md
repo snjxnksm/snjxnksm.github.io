@@ -47,15 +47,14 @@ centos7にnginxを入れて、外部からアクセスできるようにする�
     firewall-cmd --list-ports --zone=public
     </pre>
 
-# jenkinsの設定
-
+# jenkinsイストールと設定
 
 <pre>
 # yum -y install jenkins
 # chkconfig jenkins on
 </pre>
 
-#  設定の変更  
+##  設定の変更  
 
 デフォルトだと8080なので、他のサービスとバッティングする場合は、以下を修正する。  
 
@@ -65,13 +64,13 @@ centos7にnginxを入れて、外部からアクセスできるようにする�
 JENKINS_ARGS="--prefix=/jenkins --httpListenAddress=127.0.0.1"
 </pre>
 
-#  jenkins起動  
+##  jenkins起動  
 
 <pre>
 # systemctl start jenkins
 </pre>
 
-#  管理者ユーザの設定  
+##  管理者ユーザの設定  
 
 ここまでの作業で、8080ポートにてjenkinsが動作しているはず。  
 バンドルされているfirefoxなどのブラウザで http://localhost:8080 にログインすると、権限を設定せよという画面出てくる。  
