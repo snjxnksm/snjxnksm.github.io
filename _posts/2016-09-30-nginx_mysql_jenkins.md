@@ -17,7 +17,7 @@ centos7にnginxを入れて、外部からアクセスできるようにする�
 その過程で、systemctlとfirewallの簡単な取り扱いを記述する。  
 想定は、最低限のセットアップはされていて、SSH接続は可能であり、root権限を持っているサーバを対象とする。
 
-## yumの準備
+# yumの準備
 
 1. yum用ライブラリの追加  
     EPELを追加
@@ -29,7 +29,7 @@ centos7にnginxを入れて、外部からアクセスできるようにする�
     yum update
     </pre>
 
-## firewallのインストールと設定
+# firewallのインストールと設定
 
 0. firewall をインストール
     <pre>
@@ -47,7 +47,7 @@ centos7にnginxを入れて、外部からアクセスできるようにする�
     firewall-cmd --list-ports --zone=public
     </pre>
 
-## jenkinsの設定
+# jenkinsの設定
 
 
 <pre>
@@ -55,7 +55,7 @@ centos7にnginxを入れて、外部からアクセスできるようにする�
 # chkconfig jenkins on
 </pre>
 
-##  設定の変更  
+#  設定の変更  
 
 デフォルトだと8080なので、他のサービスとバッティングする場合は、以下を修正する。  
 
@@ -65,13 +65,13 @@ centos7にnginxを入れて、外部からアクセスできるようにする�
 JENKINS_ARGS="--prefix=/jenkins --httpListenAddress=127.0.0.1"
 </pre>
 
-##  jenkins起動  
+#  jenkins起動  
 
 <pre>
 # systemctl start jenkins
 </pre>
 
-##  管理者ユーザの設定  
+#  管理者ユーザの設定  
 
 ここまでの作業で、8080ポートにてjenkinsが動作しているはず。  
 バンドルされているfirefoxなどのブラウザで http://localhost:8080 にログインすると、権限を設定せよという画面出てくる。  
@@ -80,7 +80,7 @@ Administrator Password欄に、画面に指示されているファイルの中�
 初期設定画面では、プラグインの指定と全権管理者を設定する。
 
 
-## nginx
+# nginx
 
 0. nginx インストール
 
@@ -106,7 +106,7 @@ Administrator Password欄に、画面に指示されているファイルの中�
     systemctl stop nginx
     </pre>
 
-### nginxの設定
+## nginxの設定
 
 
 /etc/nginx/nginx.conf に以下を追加。
