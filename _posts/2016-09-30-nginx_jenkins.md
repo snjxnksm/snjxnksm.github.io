@@ -51,11 +51,16 @@ jenkinsは、サブディレクトリで以下のようにアクセスできる�
     firewall-cmd --list-ports --zone=public
     </pre>
 
-# jenkinsイストールと設定
+# jenkinsインストールと設定
+
+jenkinsのリポジトリを登録してインストールする。  
 
 <pre>
+# wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+# rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+</pre>
+<pre>
 # yum -y install jenkins
-# chkconfig jenkins on
 </pre>
 
 ##  設定の変更  
