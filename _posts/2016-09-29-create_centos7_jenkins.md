@@ -134,7 +134,6 @@ rootで実行すること。
 
 <pre>
 # yum -y install jenkins
-# chkconfig jenkins on
 </pre>
 
 ##  jenkins起動  
