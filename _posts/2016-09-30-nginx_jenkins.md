@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Centos7でnginxとJenkinsサーバをたてる。
+title: Centos7でnginxをたてて、Jenkinsを使えるようにする。
 categories:
   - Linux
   - Centos7
@@ -116,7 +116,7 @@ Administrator Password欄に、画面に指示されているファイルの中�
 
 ## nginxの設定
 
-
+「location」でサブディレクトリを指定して、そのさきにjenkinsをつなげる。  
 /etc/nginx/nginx.conf に以下を追加。
 
 <pre>
