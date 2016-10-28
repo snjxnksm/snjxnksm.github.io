@@ -24,6 +24,8 @@ theme: minima
 permalink: /blog/:categories/:title.html
 local: ja-jp
 
+paginate: 10
+
 gems:
     - jemoji
     - jekyll-redirect-from
