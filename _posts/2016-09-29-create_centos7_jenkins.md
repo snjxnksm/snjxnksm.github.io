@@ -101,7 +101,7 @@ https://www.centos.org/download/
     <pre>
     yum install git -y
     </pre>
-7. yu updateしておく
+7. yum updateしておく
     結構時間がかかるので覚悟してやる。  
     <pre>
     yum -y update

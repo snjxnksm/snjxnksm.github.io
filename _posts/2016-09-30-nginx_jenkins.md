@@ -14,10 +14,10 @@ categories:
 # はじめに
 
 centos7にnginx、jenkinsを入れて外部からアクセスできるようにする。  
-その過程で、systemctlとfirewallの簡単な取り扱いを記述する。  
-
-jenkinsは、サブディレクトリで以下のようにアクセスできるようにする。  
-`http://example.com/jenkins`
+* その過程で、systemctlとfirewallの簡単な取り扱いを記述する。  
+* jenkinsは、サブディレクトリで以下のようにアクセスできるようにする。  
+  `http://example.com/jenkins`
+* nginxの設定で、サブディレクトリで受け取ったアクセスを、ポートフォワーディングで内部で動作しているjenkinsに引き渡すようにする。  
 
 想定は、最低限のセットアップはされていて、SSH接続は可能であり、root権限を持っているサーバを対象とする。
 
@@ -35,6 +35,8 @@ jenkinsは、サブディレクトリで以下のようにアクセスできる�
 
 # firewallのインストールと設定
 
+firewallをインストールし、外部からのアクセスをポート80(http)に限定する。  
+
 0. firewall をインストール
     <pre>
     yum install -y firewall
@@ -48,7 +50,7 @@ jenkinsは、サブディレクトリで以下のようにアクセスできる�
     <pre>
     firewall-cmd --add-port=80/tcp --zone=public --permanent
     firewall-cmd --reload
-    firewall-cmd --list-ports --zone=public
+    firewall-cmd --list-all
     </pre>
 
 # jenkinsインストールと設定
@@ -82,7 +84,7 @@ JENKINS_ARGS="--prefix=/jenkins --httpListenAddress=127.0.0.1"
 ##  管理者ユーザの設定  
 
 ここまでの作業で、8080ポートにてjenkinsが動作しているはず。  
-バンドルされているfirefoxなどのブラウザで `http://localhost:8080/jenkins` にログインすると、権限を設定せよという画面出てくる。  
+もし、作業しているCentOS7がGUIインストールされている場合は、バンドルされているfirefoxなどのブラウザで `http://localhost:8080/jenkins` にログインすると、権限を設定せよという画面出てくる。  
 Administrator Password欄に、画面に指示されているファイルの中身を入力する。  
 そのあとは初期設定を実行する。
 初期設定画面では、プラグインの指定と全権管理者を設定する。
