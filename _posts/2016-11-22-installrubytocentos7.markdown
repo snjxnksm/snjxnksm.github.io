@@ -26,7 +26,7 @@ yum install nodejs -y
 yum install sqlite-devel -y
 ```
 
-# rbenvインストール
+# rbenv+ruby-buildインストール
 ```
 cd /
 git clone https://github.com/sstephenson/rbenv.git usr/local/src/rbenv
