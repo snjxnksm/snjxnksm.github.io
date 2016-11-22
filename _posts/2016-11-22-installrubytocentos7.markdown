@@ -12,7 +12,7 @@ categories:
 
 # はじめに
 
-空っぽのCentos7にひたすらコピペで作るrbenb+ruby-buildを使ったRubyの最新環境の作り方。  
+空っぽのCentos7にひたすらコピペで作るrbenv+ruby-buildを使ったRubyの最新環境の作り方。  
 ひたすらコピペ。  
 とにかくコピペ。  
 
