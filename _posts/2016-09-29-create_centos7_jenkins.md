@@ -83,8 +83,8 @@ https://www.centos.org/download/
     以下は、Centos7インストーラで「Javaプラットフォーム」アドオンを選択した場合と同等の作業。
     jenkinsを走らせるのに必要。
     <pre>
-    yum install java-1.8.0-openjdk
-    yum install java-1.8.0-openjdk-devel
+    yum -y install java-1.8.0-openjdk
+    yum -y install java-1.8.0-openjdk-devel
     </pre>
 3.  開発環境インストール  
     以下は、後述のGuestAdditionsをインストールする際に必要になる。  
