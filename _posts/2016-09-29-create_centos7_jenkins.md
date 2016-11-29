@@ -89,6 +89,7 @@ https://www.centos.org/download/
 3.  開発環境インストール  
     以下は、後述のGuestAdditionsをインストールする際に必要になる。  
     <pre>
+    yum -y update kernel    
     yum -y install epel-release
     yum install -y bzip2 gcc make kernel-devel kernel-headers dkms gcc-c++
     </pre>
