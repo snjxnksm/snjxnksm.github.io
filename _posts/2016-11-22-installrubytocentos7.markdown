@@ -13,7 +13,8 @@ categories:
 # はじめに
 
 空っぽのCentos7にひたすらコピペで作るrbenv+ruby-buildを使ったRubyの最新環境の作り方。  
-ひたすらコピペ。  
+とりあえず、rootのパスワードは確認すること。  
+あとは、ひたすらコピペ。  
 とにかくコピペ。  
 
 # 環境作成
@@ -61,8 +62,8 @@ rbenv global 2.3.1
 ```
 gem install rbenv-rehash
 gem update --system
-gem install bundler
 gem install rake
+gem install bundler
 gem install rails
 ```
 
