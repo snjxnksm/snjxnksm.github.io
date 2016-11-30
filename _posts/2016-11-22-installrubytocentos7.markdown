@@ -19,7 +19,7 @@ categories:
 # 環境作成
 ```
 sudo su
-yum groupinstall "Development Tools"
+yum groupinstall "Development Tools" -y
 yum install epel-release -y
 yum install -y openssl-devel readline-devel zlib-devel curl-devel libyaml-devel ImageMagick ImageMagick-devel
 yum install nodejs -y
