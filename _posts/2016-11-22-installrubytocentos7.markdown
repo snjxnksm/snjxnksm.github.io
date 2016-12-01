@@ -25,6 +25,7 @@ yum install epel-release -y
 yum install -y openssl-devel readline-devel zlib-devel curl-devel libyaml-devel ImageMagick ImageMagick-devel
 yum install nodejs -y
 yum install sqlite-devel -y
+yum install libxml2 libxml2-devel libxslt-devel -y 
 ```
 
 # rbenv+ruby-buildインストール
