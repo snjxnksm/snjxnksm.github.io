@@ -1,0 +1,37 @@
+---
+layout: post
+title: "空っぽのCentos7にコピペで作るMariaDB"
+categories:
+  - Linux
+  - Centos7
+published: false
+---
+
+
+* TOC
+{:toc}
+
+# はじめに
+
+空っぽのCentos7にひたすらコピペで作るMariaDB。  
+従来は MySQL だったけど、名前が変わったみたいね。  
+
+# インストール
+
+```
+sudo su
+
+yum -y install mariadb mariadb-server
+yum -y install mariadb-devel
+
+systemctl enable mariadb.service
+systemctl start mariadb.service
+systemctl status mariadb.service
+
+```
+
+# 初期化。
+
+```
+mysql_secure_installation
+```
