@@ -37,6 +37,7 @@ centos7にnginx、jenkinsを入れて外部からアクセスできるように�
 # firewallのインストールと設定
 
 firewallをインストールし、外部からのアクセスをポート80(http)に限定する。  
+（nginxとjenkinsはポート8080で通信するが、localhostを使うので、firewallの設定はしない）  
 
 0. firewall をインストール
     <pre>
