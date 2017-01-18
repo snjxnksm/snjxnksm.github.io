@@ -20,7 +20,7 @@ centos7にnginx、jenkinsを入れて外部からアクセスできるように�
   `http://example.com/jenkins`  
 * nginxの設定で、サブディレクトリで受け取ったアクセスを、ポートフォワーディングで内部で動作しているjenkinsに引き渡すようにする。  
 
-想定は、最低限のセットアップはされていて、SSH接続は可能であり、root権限を持っているサーバを対象とする。
+想定は、最低限のセットアップはされていて、SELinuxは停止していて、SSH接続は可能であり、root権限を持っているサーバを対象とする。
 
 # yumの準備
 
@@ -166,7 +166,7 @@ JENKINS_ARGS="--prefix=/jenkins --httpListenAddress=127.0.0.1"
 
           ##  Jenkins向け設定 ここから
           location /jenkins {
-              proxy_pass  http://localhost:8080/jenkins;
+              proxy_pass http://localhost:8080/jenkins;
           }
           ## ここまで
 
@@ -183,11 +183,12 @@ JENKINS_ARGS="--prefix=/jenkins --httpListenAddress=127.0.0.1"
 
   </pre>
 
+設定を変更したあと、systemctlでnginxを再起動。
 
 ##  管理者ユーザの設定  
 
 これで、通常のhttpにてjenkinsが動作しているはず。  
-ブラウザで `http://FQDN/jenkins` にログインすると、権限を設定せよという画面出てくる。  
+ブラウザで `http://example.com/jenkins` にログインすると、権限を設定せよという画面出てくる。  
 Administrator Password欄に、画面に指示されているファイルの中身を入力する。  
 そのあとは初期設定を実行する。
 初期設定画面では、プラグインの指定と全権管理者を設定する。
