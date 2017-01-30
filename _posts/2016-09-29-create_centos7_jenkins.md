@@ -114,6 +114,7 @@ https://www.centos.org/download/
 
 ##  GuestAdditionsインストール  
 マウスカーソルのシームレスな移動や、ホストとゲストの間のクリップボード経由のコピペなどをやりたい場合は、GuestAdditionsCDを仮想マシンにインストールする。  
+
 * VMのメニュー→デバイス→GuestAdditionsCDイメージの挿入  
 * 実行するかどうか聞かれるので実行する。  
 * 無事に実行できたら、再起動  
