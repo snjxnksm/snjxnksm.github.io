@@ -2,7 +2,7 @@
 layout: post
 title: Centos7でJenkinsサーバをたてる。
 date:   2016-09-29 00:00:00 +0900
-rags:
+tags:
   - virtualbox
   - Linux
   - Centos7
