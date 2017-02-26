@@ -1,7 +1,8 @@
 ---
 layout: post
 title: 空っぽのCentos7にコピペで作るRuby環境。
-categories:
+date:   2016-11-22 00:00:00 +0900
+tags:
   - Linux
   - Centos7
   - ruby
@@ -25,7 +26,7 @@ yum install epel-release -y
 yum install -y openssl-devel readline-devel zlib-devel curl-devel libyaml-devel ImageMagick ImageMagick-devel
 yum install nodejs -y
 yum install sqlite-devel -y
-yum install libxml2 libxml2-devel libxslt-devel -y 
+yum install libxml2 libxml2-devel libxslt-devel -y
 ```
 
 # rbenv+ruby-buildインストール

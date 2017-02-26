@@ -1,7 +1,8 @@
 ---
 layout: post
 title: Centos7ではネットワークインターフェースをアクティブにするにはnmcliコマンドを使う。
-categories:
+date:   2016-10-28 00:00:00 +0900
+tags:
   - Linux
   - Centos7
   - Centos6

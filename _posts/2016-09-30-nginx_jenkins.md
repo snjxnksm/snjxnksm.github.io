@@ -1,7 +1,8 @@
 ---
 layout: post
 title: Centos7でnginxをたてて、Jenkinsを使えるようにする。
-categories:
+date:   2016-09-30 00:00:00 +0900
+tags:
   - Linux
   - Centos7
   - nginx

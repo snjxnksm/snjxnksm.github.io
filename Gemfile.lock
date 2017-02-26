@@ -27,6 +27,7 @@ GEM
       rouge (~> 1.7)
       safe_yaml (~> 1.0)
     jekyll-feed (0.7.1)
+    jekyll-paginate (1.1.0)
     jekyll-redirect-from (0.11.0)
       jekyll (>= 2.0)
     jekyll-sass-converter (1.4.0)
@@ -72,6 +73,7 @@ PLATFORMS
 DEPENDENCIES
   jekyll (= 3.2.1)
   jekyll-feed
+  jekyll-paginate
   jekyll-redirect-from
   jekyll-sitemap
   jemoji

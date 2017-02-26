@@ -21,13 +21,17 @@ kramdown:
   input: GFM
 
 theme: minima
-# permalink: /blog/:categories/:title.html
+permalink: /blog/:year/:month/:day/:title.html
 local: ja-jp
 
 paginate: 10
+
+# Include custom directories
+include: ['_pages']
 
 gems:
     - jemoji
     - jekyll-redirect-from
     - jekyll-sitemap
     - jekyll-feed
+    - jekyll-paginate

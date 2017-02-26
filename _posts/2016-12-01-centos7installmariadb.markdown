@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "空っぽのCentos7にコピペで作るMariaDB"
-categories:
+date:   2016-12-01 00:00:00 +0900
+tags:
   - Linux
   - Centos7
 published: false
