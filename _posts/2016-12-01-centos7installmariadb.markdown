@@ -16,6 +16,7 @@ published: false
 
 空っぽのCentos7にひたすらコピペで作るMariaDB。  
 従来は MySQL だったけど、名前が変わったみたいね。  
+たぶん、以下のやり方はMySQLでも使えるよ思うよ。  
 
 # インストール
 
@@ -36,3 +37,9 @@ systemctl status mariadb.service
 ```
 mysql_secure_installation
 ```
+
+# 管理者ユーザの取り扱い
+
+# テーブルの作成
+
+# 作業ユーザの作成
