@@ -50,7 +50,7 @@ set-executionpolicy remotesigned
 
 ## コマンド一覧
 
-コマンド一覧は、microsodtのドキュメントを見て欲しい。  
+コマンド一覧は、microsoft のドキュメントを見て欲しい。  
 [PackageManagement コマンドレット](https://msdn.microsoft.com/ja-jp/powershell/wmf/5.0/oneget_cmdlets)
 
 
