@@ -13,7 +13,7 @@ published: true
 
 # はじめに
 
-Linuxユーザには、yumやapt-getなどといったコマンドに普段からお世話になっていると思う。   
+Linuxユーザなら、yumやapt-getなどといったコマンドに普段からお世話になっていると思う。   
 なにかしらシステムを構築しようとした時、これらのパッケージ管理システムがないと、正直途方に暮れてしまう。  
 パッケージ管理システムさえあれば、いちから環境を作成する際にも、インストーラをいちいち探さなくてもすむし楽チンである。  
 ところが、わりと最近まで Windows なんてメジャーなOSに、これに相当するものがなかった。  
@@ -50,7 +50,7 @@ set-executionpolicy remotesigned
 
 ## コマンド一覧
 
-コマンド一覧は、microsoft のドキュメントを見て欲しい。  
+コマンド一覧の詳細は、microsoft のドキュメントを見て欲しい。  
 [PackageManagement コマンドレット](https://msdn.microsoft.com/ja-jp/powershell/wmf/5.0/oneget_cmdlets)
 
 
@@ -86,4 +86,5 @@ Get-PackageProvider chocolatey
 
 ## 以上
 
+まだちょっと動作的に不安定な部分もあって、いまいち信用ならない部分もあるけど、ひとまずは
 以上！
