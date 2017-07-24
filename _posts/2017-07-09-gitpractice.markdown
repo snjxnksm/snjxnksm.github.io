@@ -38,6 +38,10 @@ Gitを、だね。使うわけだよ。
 | release | リリース準備<br>全ての機能追加作業が済んだら（つまりdevelopから分岐したfeatureが全てマージされて合流したら）、developから分岐する。<br>リリースが無事に完了したら、developとmasterの両方にマージすることで、masterとdevelopの同期を取る。<br>作業が終わったらこのブランチも削除。  |
 | hotfix | 緊急のバグフィックス<br>これだけはmasterから分岐する。<br>不具合対応が済んだら、これもdevelopとmasterの両方にマージすることで、それぞれのブランチの同期を取る。<br>作業が終わったらこのブランチも削除。  |
 
+### SourceTreeを使った場合の手順とか
+
+* [Git-flow](https://github.com/snjxnksm/practice_flow/blob/master/readme.adoc)
+
 ### 参考URL
 
 * [git-flowについて](https://gist.github.com/Getaji/f5fa9b588bf1bfa6e21a) （コマンドラインでの使い方概略）  
