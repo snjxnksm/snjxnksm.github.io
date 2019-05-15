@@ -1,0 +1,108 @@
+---
+layout: post
+title: "Ruby On Railsでバッチ処理を作る"
+date: "2019-05-15 20:10:39 +0900"
+tags:
+  - ruby
+  - rails
+  - gem
+---
+
+* TOC
+{:toc}
+
+# Ruby On Rails におけるバッチ処理の作り方
+
+Railsでのバッチ処理を普通に検索すると、`whenever`がヒットする。
+別にこれでもいいんだけど、`whenever`は`cron`に依存しているのが気に食わない。`docker`で環境を作っていたりすると`cron`デーモンをキックするのに余計な手間がかかる。
+次点で`sidekiq`を使う方法も出てくるけど、`sidekiq`は`redis`が必須要件となっていて、サーバの構成要件に口出しできない立場だったりするとそもそも導入はできない。
+
+ということで、`crono`というgemを使って実現する方法を以下に示す。
+多分これが一番手数が少ない。
+
+## crono使用
+
+https://github.com/plashchynski/crono
+
+Gemfileに追加
+
+```
+gem 'crono'
+```
+
+gemのインストール、cronoのインストール、migrateし直し
+
+```
+bundle install
+rails generate crono:install
+rails db:environment:set db:drop db:create db:migrate db:seed
+```
+
+jobの作成
+
+```
+rails g job aggregate
+```
+
+ActiveJobが作った `app/jobs/application_job.rb` に、ログ出力切り替えを追加し・・・
+
+```
+class ApplicationJob < ActiveJob::Base
+  def jobLogger
+    Crono.logger.nil? ? Rails.logger : Crono.logger
+  end
+end
+```
+
+`app/jobs/aggregate_job.rb` に、jobの中身を書いて
+
+```
+class AggregateJob < ApplicationJob
+  queue_as :default
+
+  #
+  # 請求データの月次バッチ
+  #
+  def perform(*_args)
+    # require 'byebug'; byebug
+    jobLogger.info '*** start aggregate ***'
+  end
+end
+```
+
+
+config/crontab.rb に起動するタイミングを書く。
+
+```
+# Crono.perform(TestJob).every 2.days, at: '15:30'
+#
+# Crono.perform(AggregateJob).every 1.minutes
+# Crono.perform(AggregateJob).every 10.second # for test
+
+# 月初に実行
+Crono.perform(AggregateJob).every 1.month, at: 'start of the month at 0am'
+```
+
+cronoデーモンを実行するのは以下
+
+```
+bundle exec crono start
+```
+
+`rails c` などで手動実行する場合は `AggregateJob.perform_now`
+（つまり、`rails g job`で作ったクラス名とperform_nowメソッド）
+
+```
+# rails c
+Running via Spring preloader in process 68
+Loading development environment (Rails 5.2.2)
+irb(main):001:0> AggregateJob.perform_now
+Performing AggregateJob (Job ID: d3283fa8-eafd-4703-a30d-d0eb67b20461) from Async(default)
+2019-05-15T11:48:57+09:00  *** start aggregate ***
+Performed AggregateJob (Job ID: d3283fa8-eafd-4703-a30d-d0eb67b20461) from Async(default) in 3.82ms
+=> true
+irb(main):002:0>
+
+```
+
+実行ログは `log/crono.log` に出力される。
