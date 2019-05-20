@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Ruby On Railsでバッチ処理を作る"
+title: "Ruby On Railsで、cronoを使って最小手順でバッチ処理を作る"
 date: "2019-05-15 20:10:39 +0900"
 tags:
   - ruby
@@ -13,24 +13,26 @@ tags:
 
 # Ruby On Rails におけるバッチ処理の作り方
 
-Railsでのバッチ処理を普通に検索すると、`whenever`がヒットする。
-別にこれでもいいんだけど、`whenever`は`cron`に依存しているのが気に食わない。`docker`で環境を作っていたりすると`cron`デーモンをキックするのに余計な手間がかかる。
-次点で`sidekiq`を使う方法も出てくるけど、`sidekiq`は`redis`が必須要件となっていて、サーバの構成要件に口出しできない立場だったりするとそもそも導入はできない。
+Railsでのバッチ処理を普通に検索すると、`whenever`がヒットする。  
+別にこれでもいいんだけど、`whenever`は`cron`に依存しているのが気に食わない。`docker`で環境を作っていたりすると`cron`デーモンをキックするのに余計な手間がかかる。  
+次点で`sidekiq`を使う方法も出てくるけど、`sidekiq`は`redis`が必須要件となっていて、サーバの構成要件に口出しできない立場だったりするとそもそも導入はできない。  
 
-ということで、`crono`というgemを使って実現する方法を以下に示す。
-多分これが一番手数が少ない。
+ということで、`crono`というgemを使って実現する方法を以下に示す。  
+多分これが一番手数が少ない。  
 
-## crono使用
+## cronを使用するには
 
-https://github.com/plashchynski/crono
+[A time-based background job scheduler daemon (just like Cron) for Rails](https://github.com/plashchynski/crono)  
+Readmeに書いてあることをほとんどそのままやればよろしい。  
 
-Gemfileに追加
+Gemfileに次の２件を追加  
 
 ```
 gem 'crono'
+gem 'daemons'
 ```
 
-gemのインストール、cronoのインストール、migrateし直し
+gemのインストール、cronoのインストール、migrateし直し  
 
 ```
 bundle install
@@ -38,13 +40,13 @@ rails generate crono:install
 rails db:environment:set db:drop db:create db:migrate db:seed
 ```
 
-jobの作成
+ActiveJobのジェネレータでjobの作成  
 
 ```
 rails g job aggregate
 ```
 
-ActiveJobが作った `app/jobs/application_job.rb` に、ログ出力切り替えを追加し・・・
+ActiveJobが作った `app/jobs/application_job.rb` に、 **ログ出力切り替え** を追加し・・・  
 
 ```
 class ApplicationJob < ActiveJob::Base
@@ -54,7 +56,8 @@ class ApplicationJob < ActiveJob::Base
 end
 ```
 
-`app/jobs/aggregate_job.rb` に、jobの中身を書いて
+`app/jobs/aggregate_job.rb` に、jobの中身を書いて  
+（ここには書いてないけど、普通にActiveRecordとか使って処理できる）  
 
 ```
 class AggregateJob < ApplicationJob
@@ -71,7 +74,8 @@ end
 ```
 
 
-config/crontab.rb に起動するタイミングを書く。
+config/crontab.rb に起動するタイミングを書く。  
+（Crono.performに、上記ActiveJobのジェネレータで作ったクラス名を渡す）
 
 ```
 # Crono.perform(TestJob).every 2.days, at: '15:30'
@@ -83,14 +87,14 @@ config/crontab.rb に起動するタイミングを書く。
 Crono.perform(AggregateJob).every 1.month, at: 'start of the month at 0am'
 ```
 
-cronoデーモンを実行するのは以下
+cronoデーモンを実行するのは以下  
 
 ```
 bundle exec crono start
 ```
 
-`rails c` などで手動実行する場合は `AggregateJob.perform_now`
-（つまり、`rails g job`で作ったクラス名とperform_nowメソッド）
+`rails c` などで手動実行する場合は `AggregateJob.perform_now`  
+（つまり、`rails g job`で作ったクラス名とperform_nowメソッド）  
 
 ```
 # rails c
@@ -105,4 +109,8 @@ irb(main):002:0>
 
 ```
 
-実行ログは `log/crono.log` に出力される。
+cronoデーモンの実行ログは `log/crono.log` に出力される。  
+
+## ログ出力切り替えに関して
+
+'ApplicationJob'に **ログ出力切り替え** を用意した理由は、cronoデーモンで実行された場合には Rails.logger を叩いてくれないから。  
