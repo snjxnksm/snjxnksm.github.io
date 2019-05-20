@@ -113,4 +113,4 @@ cronoデーモンの実行ログは `log/crono.log` に出力される。
 
 ## ログ出力切り替えに関して
 
-'ApplicationJob'に **ログ出力切り替え** を用意した理由は、cronoデーモンで実行された場合には Rails.logger を叩いてくれないから。  
+`ApplicationJob`に **ログ出力切り替え** を用意した理由は、cronoデーモンで実行された場合には Rails.logger を叩いてくれないから。  
