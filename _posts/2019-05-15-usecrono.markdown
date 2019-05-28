@@ -20,7 +20,7 @@ Railsでのバッチ処理を普通に検索すると、`whenever`がヒット�
 ということで、`crono`というgemを使って実現する方法を以下に示す。  
 多分これが一番手数が少ない。  
 
-## cronを使用するには
+## cronoを使用するには
 
 [A time-based background job scheduler daemon (just like Cron) for Rails](https://github.com/plashchynski/crono)  
 Readmeに書いてあることをほとんどそのままやればよろしい。  
