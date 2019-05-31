@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "rails_byebug_with_docker"
+title: "Docker環境でRailsのステップ実行するには"
 date: "2019-05-31 17:07:26 +0900"
 tags:
   - ruby
   - rails
   - docker
 ---
-# Docker環境でRailsのステップ実行
+# Docker環境でRailsのステップ実行するには
 
 docker-compose.ymlに以下、`stdin_open: true`と` tty: true`を追加して、コンテナを再起動する。
 
