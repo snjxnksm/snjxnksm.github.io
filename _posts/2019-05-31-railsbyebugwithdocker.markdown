@@ -7,7 +7,6 @@ tags:
   - rails
   - docker
 ---
-# Docker環境でRailsのステップ実行するには
 
 docker-compose.ymlに以下、`stdin_open: true`と` tty: true`を追加して、コンテナを再起動する。
 
