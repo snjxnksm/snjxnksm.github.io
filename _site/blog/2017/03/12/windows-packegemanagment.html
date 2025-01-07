@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Windows PackegeManagment</title>
+  <meta name="description" content="">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2017/03/12/windows-packegemanagment.html">
+  <link rel="alternate" type="application/rss+xml" title="snjx.nksm" href="http://localhost:4000/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">snjx.nksm</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/tags">Posts By Tags</a>
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          
+
+
+
+<span class="post-meta">
+
+  
+  <div
+    class="post-tags">
+    
+      <a href="/tags#Windows">
+        Windows
+      </a>
+    
+      <a href="/tags#PackegeManagment">
+        PackegeManagment
+      </a>
+    
+      <a href="/tags#PowerShell">
+        PowerShell
+      </a>
+    
+  </div>
+</span>
+
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Windows PackegeManagment</h1>
+    <p class="post-meta"><time datetime="2017-03-12T15:41:11+09:00" itemprop="datePublished">Mar 12, 2017</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <ul id="markdown-toc">
+  <li><a href="#はじめに" id="markdown-toc-はじめに">はじめに</a>    <ul>
+      <li><a href="#準備" id="markdown-toc-準備">準備</a></li>
+      <li><a href="#コマンド一覧" id="markdown-toc-コマンド一覧">コマンド一覧</a></li>
+      <li><a href="#現在インストールしているもの一覧" id="markdown-toc-現在インストールしているもの一覧">現在インストールしているもの一覧</a></li>
+      <li><a href="#インストールできるものを探す" id="markdown-toc-インストールできるものを探す">インストールできるものを探す</a></li>
+      <li><a href="#新たにインストール" id="markdown-toc-新たにインストール">新たにインストール</a></li>
+      <li><a href="#アンインストール" id="markdown-toc-アンインストール">アンインストール</a></li>
+      <li><a href="#chocorateyのリポジトリを使えるようにする" id="markdown-toc-chocorateyのリポジトリを使えるようにする">chocorateyのリポジトリを使えるようにする。</a></li>
+      <li><a href="#以上" id="markdown-toc-以上">以上</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="はじめに">はじめに</h1>
+
+<p>Linuxユーザなら、yumやapt-getなどといったコマンドに普段からお世話になっていると思う。  
+なにかしらシステムを構築しようとした時、これらのパッケージ管理システムがないと、正直途方に暮れてしまう。<br />
+パッケージ管理システムさえあれば、いちから環境を作成する際にも、インストーラをいちいち探さなくてもすむし楽チンである。<br />
+ところが、わりと最近まで Windows なんてメジャーなOSに、これに相当するものがなかった。<br />
+いや、非公式なものであれば chocoratey とかいくつかあるけど、公式なものはなかったはず。そこで出てきたのが、Windows10のPackegeManagmentだ。</p>
+
+<h2 id="準備">準備</h2>
+
+<p>PackegeManagmentはPoweShellで実行する。<br />
+cortanaさんに聞いてみるか、コマンドラインを起動して、<code class="language-plaintext highlighter-rouge">&gt; poweshell</code> と入力してみる。<br />
+もし、初めて起動したなら、こんな感じで叱られるかもしれない。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Windows PowerShell
+Copyright (C) 2016 Microsoft Corporation. All rights reserved.
+
+. : このシステムではスクリプトの実行が無効になっているため、ファイル C:\Users\shinj_000\Documents\WindowsPowerShell\Mic
+rosoft.PowerShell_profile.ps1 を読み込むことができません。詳細については、「about_Execution_Policies」(http://go.micros
+oft.com/fwlink/?LinkID=135170) を参照してください。
+発生場所 行:1 文字:3
++ . 'C:\Users\shinj_000\Documents\WindowsPowerShell\Microsoft.PowerShel ...
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   + CategoryInfo          : セキュリティ エラー: :slightly_smiling_face: ) []、PSSecurityException
+   + FullyQualifiedErrorId : UnauthorizedAccess
+</code></pre></div></div>
+
+<p>起動時にこんな感じのエラーが出たら、スクリプトを使えるようにしておく。<br />
+まずPwoeShellを管理者権限で起動して、以下のコマンドを実行する。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>set-executionpolicy remotesigned
+</code></pre></div></div>
+
+<p>次からは叱られない。</p>
+
+<h2 id="コマンド一覧">コマンド一覧</h2>
+
+<p>コマンド一覧の詳細は、microsoft のドキュメントを見て欲しい。  
+<a href="https://msdn.microsoft.com/ja-jp/powershell/wmf/5.0/oneget_cmdlets">PackageManagement コマンドレット</a></p>
+
+<h2 id="現在インストールしているもの一覧">現在インストールしているもの一覧</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>get-package
+</code></pre></div></div>
+
+<h2 id="インストールできるものを探す">インストールできるものを探す</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find-package -name XXXX
+</code></pre></div></div>
+
+<h2 id="新たにインストール">新たにインストール</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>install-package -name XXXX
+</code></pre></div></div>
+
+<h2 id="アンインストール">アンインストール</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Uninstall-Package -name XXXX
+</code></pre></div></div>
+
+<h2 id="chocorateyのリポジトリを使えるようにする">chocorateyのリポジトリを使えるようにする。</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Get-PackageProvider chocolatey
+</code></pre></div></div>
+
+<h2 id="以上">以上</h2>
+
+<p>まだちょっと動作的に不安定な部分もあって、いまいち信用ならない部分もあるけど、ひとまずは
+以上！</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">snjx.nksm</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>snjx.nksm</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/snjxnksm"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">snjxnksm</span></a>
+
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>いろいろメモしていきますよ。
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

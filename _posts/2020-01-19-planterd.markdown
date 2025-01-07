@@ -5,7 +5,7 @@ date: "2020-01-19 14:03:15 +0900"
 tags:
   - ruby
   - rails
-  published: false
+published: false
 ---
 
 * TOC

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Centos7でnginxをたてて、Jenkinsを使えるようにする。</title>
+  <meta name="description" content="">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2016/09/30/nginx_jenkins.html">
+  <link rel="alternate" type="application/rss+xml" title="snjx.nksm" href="http://localhost:4000/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">snjx.nksm</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/tags">Posts By Tags</a>
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          
+
+
+
+<span class="post-meta">
+
+  
+  <div
+    class="post-tags">
+    
+      <a href="/tags#Linux">
+        Linux
+      </a>
+    
+      <a href="/tags#Centos7">
+        Centos7
+      </a>
+    
+      <a href="/tags#nginx">
+        nginx
+      </a>
+    
+      <a href="/tags#Jenkins">
+        Jenkins
+      </a>
+    
+  </div>
+</span>
+
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Centos7でnginxをたてて、Jenkinsを使えるようにする。</h1>
+    <p class="post-meta"><time datetime="2016-09-30T00:00:00+09:00" itemprop="datePublished">Sep 30, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <ul id="markdown-toc">
+  <li><a href="#はじめに" id="markdown-toc-はじめに">はじめに</a></li>
+  <li><a href="#yumの準備" id="markdown-toc-yumの準備">yumの準備</a></li>
+  <li><a href="#firewallのインストールと設定" id="markdown-toc-firewallのインストールと設定">firewallのインストールと設定</a></li>
+  <li><a href="#jenkinsインストールと設定" id="markdown-toc-jenkinsインストールと設定">jenkinsインストールと設定</a>    <ul>
+      <li><a href="#設定の変更" id="markdown-toc-設定の変更">設定の変更</a></li>
+      <li><a href="#jenkins起動" id="markdown-toc-jenkins起動">jenkins起動</a></li>
+    </ul>
+  </li>
+  <li><a href="#nginx" id="markdown-toc-nginx">nginx</a>    <ul>
+      <li><a href="#nginxの設定" id="markdown-toc-nginxの設定">nginxの設定</a></li>
+      <li><a href="#管理者ユーザの設定" id="markdown-toc-管理者ユーザの設定">管理者ユーザの設定</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="はじめに">はじめに</h1>
+
+<p>centos7にnginx、jenkinsを入れて外部からアクセスできるようにする。</p>
+
+<ul>
+  <li>その過程で、systemctlとfirewallの簡単な取り扱いを記述する。</li>
+  <li>jenkinsは、サブディレクトリで以下のようにアクセスできるようにする。<br />
+  <code class="language-plaintext highlighter-rouge">http://example.com/jenkins</code></li>
+  <li>nginxの設定で、サブディレクトリで受け取ったアクセスを、ポートフォワーディングで内部で動作しているjenkinsに引き渡すようにする。</li>
+</ul>
+
+<p>想定は、最低限のセットアップはされていて、SELinuxは停止していて、SSH接続は可能であり、root権限を持っているサーバを対象とする。</p>
+
+<h1 id="yumの準備">yumの準備</h1>
+
+<ol>
+  <li>yum用ライブラリの追加<br />
+ EPELを追加
+    <pre>
+ yum install epel-release -y
+ </pre>
+  </li>
+  <li>update
+    <pre>
+ yum update
+ </pre>
+  </li>
+</ol>
+
+<h1 id="firewallのインストールと設定">firewallのインストールと設定</h1>
+
+<p>firewallをインストールし、外部からのアクセスをポート80(http)に限定する。<br />
+（nginxとjenkinsはポート8080で通信するが、localhostを使うので、firewallの設定はしない）</p>
+
+<ol>
+  <li>firewall をインストール
+    <pre>
+ yum install -y firewall
+ </pre>
+  </li>
+  <li>firewall を有効化
+    <pre>
+ systemctl enable firewalld
+ systemctl start firewalld
+ </pre>
+  </li>
+  <li>ポートを開ける
+    <pre>
+ firewall-cmd --add-port=80/tcp --zone=public --permanent
+ firewall-cmd --reload
+ firewall-cmd --list-all
+ </pre>
+  </li>
+</ol>
+
+<h1 id="jenkinsインストールと設定">jenkinsインストールと設定</h1>
+
+<p>jenkinsのリポジトリを登録してインストールする。</p>
+
+<pre>
+# wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+# rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+</pre>
+<pre>
+# yum -y install jenkins
+</pre>
+
+<h2 id="設定の変更">設定の変更</h2>
+
+<p>nginxと連携するための設定を記述する。</p>
+
+<pre>
+# vi /etc/sysconfig/jenkins
+# このなかの、JENKINS_ARGSへ起動パラメータを追加する。
+JENKINS_ARGS="--prefix=/jenkins --httpListenAddress=127.0.0.1"
+</pre>
+
+<h2 id="jenkins起動">jenkins起動</h2>
+
+<pre>
+# systemctl start jenkins
+</pre>
+
+<h1 id="nginx">nginx</h1>
+
+<ol>
+  <li>
+    <p>nginx インストール</p>
+
+    <pre>
+ yum install -y nginx
+ </pre>
+  </li>
+  <li>
+    <p>サービススタート</p>
+
+    <pre>
+ systemctl enable nginx
+ systemctl start nginx
+ </pre>
+  </li>
+  <li>
+    <p>ステータス確認</p>
+
+    <pre>
+ systemctl status nginx
+ </pre>
+  </li>
+  <li>
+    <p>サービス停止</p>
+    <pre>
+ systemctl stop nginx
+ </pre>
+  </li>
+</ol>
+
+<h2 id="nginxの設定">nginxの設定</h2>
+
+<p>「location」でサブディレクトリを指定して、そのさきにjenkinsをつなげる。<br />
+/etc/nginx/nginx.conf に以下を追加。</p>
+
+<pre>
+  [root@localhost log]# cat /etc/nginx/nginx.conf
+  # For more information on configuration, see:
+  #   * Official English Documentation: http://nginx.org/en/docs/
+  #   * Official Russian Documentation: http://nginx.org/ru/docs/
+
+  user nginx;
+  worker_processes auto;
+  error_log /var/log/nginx/error.log;
+  pid /run/nginx.pid;
+
+  # Load dynamic modules. See /usr/share/nginx/README.dynamic.
+  include /usr/share/nginx/modules/*.conf;
+
+  events {
+      worker_connections 1024;
+  }
+
+  http {
+      log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                        '$status $body_bytes_sent "$http_referer" '
+                        '"$http_user_agent" "$http_x_forwarded_for"';
+
+      access_log  /var/log/nginx/access.log  main;
+
+      sendfile            on;
+      tcp_nopush          on;
+      tcp_nodelay         on;
+      keepalive_timeout   65;
+      types_hash_max_size 2048;
+
+      include             /etc/nginx/mime.types;
+      default_type        application/octet-stream;
+
+      # Load modular configuration files from the /etc/nginx/conf.d directory.
+      # See http://nginx.org/en/docs/ngx_core_module.html#include
+      # for more information.
+      include /etc/nginx/conf.d/*.conf;
+
+      server {
+          listen       80 default_server;
+          listen       [::]:80 default_server;
+          server_name  _;
+          root         /usr/share/nginx/html;
+
+          # Load configuration files for the default server block.
+          include /etc/nginx/default.d/*.conf;
+
+          location / {
+          }
+
+          ##  Jenkins向け設定 ここから
+          location /jenkins {
+              proxy_pass http://localhost:8080/jenkins;
+          }
+          ## ここまで
+
+          error_page 404 /404.html;
+              location = /40x.html {
+          }
+
+          error_page 500 502 503 504 /50x.html;
+              location = /50x.html {
+          }
+      }
+
+  }
+
+  </pre>
+
+<p>設定を変更したあと、systemctlでnginxを再起動。</p>
+
+<h2 id="管理者ユーザの設定">管理者ユーザの設定</h2>
+
+<p>これで、通常のhttpにてjenkinsが動作しているはず。<br />
+ブラウザで <code class="language-plaintext highlighter-rouge">http://example.com/jenkins</code> にログインすると、権限を設定せよという画面出てくる。<br />
+Administrator Password欄に、画面に指示されているファイルの中身を入力する。<br />
+そのあとは初期設定を実行する。
+初期設定画面では、プラグインの指定と全権管理者を設定する。</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">snjx.nksm</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>snjx.nksm</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/snjxnksm"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">snjxnksm</span></a>
+
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>いろいろメモしていきますよ。
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

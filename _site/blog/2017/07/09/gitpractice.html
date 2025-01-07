@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Gitのブランチ戦略</title>
+  <meta name="description" content="">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2017/07/09/gitpractice.html">
+  <link rel="alternate" type="application/rss+xml" title="snjx.nksm" href="http://localhost:4000/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">snjx.nksm</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/tags">Posts By Tags</a>
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          
+
+
+
+<span class="post-meta">
+
+  
+  <div
+    class="post-tags">
+    
+      <a href="/tags#Git">
+        Git
+      </a>
+    
+      <a href="/tags#構成管理">
+        構成管理
+      </a>
+    
+  </div>
+</span>
+
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Gitのブランチ戦略</h1>
+    <p class="post-meta"><time datetime="2017-07-09T14:40:45+09:00" itemprop="datePublished">Jul 9, 2017</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <ul id="markdown-toc">
+  <li><a href="#gitブランチ戦略" id="markdown-toc-gitブランチ戦略">Gitブランチ戦略</a>    <ul>
+      <li><a href="#git-flow" id="markdown-toc-git-flow">Git Flow</a>        <ul>
+          <li><a href="#sourcetreeを使った場合の手順とか" id="markdown-toc-sourcetreeを使った場合の手順とか">SourceTreeを使った場合の手順とか</a></li>
+          <li><a href="#参考url" id="markdown-toc-参考url">参考URL</a></li>
+        </ul>
+      </li>
+      <li><a href="#github-flow" id="markdown-toc-github-flow">GitHub Flow</a>        <ul>
+          <li><a href="#参考url-1" id="markdown-toc-参考url-1">参考URL</a></li>
+        </ul>
+      </li>
+      <li><a href="#gitlab-flow" id="markdown-toc-gitlab-flow">GitLab Flow</a>        <ul>
+          <li><a href="#参考url-2" id="markdown-toc-参考url-2">参考URL</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="gitブランチ戦略">Gitブランチ戦略</h1>
+
+<p>Gitを、だね。使うわけだよ。<br />
+でも、どんな使い方がるあるの？って探した時に、よく似た名前で微妙に違う説明が書いてあって、混乱してしまう。<br />
+で、以下にざっと目についたブランチ戦略をリストアップしてみた。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>名前</th>
+      <th>特徴</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Git Flow</td>
+      <td>一番メジャー<br />Gitコマンドのプラグインとして作られていて、専用のサブコマンドが用意されている<br />SourceTree でGUI操作が可能。<br />運用するブランチが少し多い。<br />ブランチandマージ方式。</td>
+    </tr>
+    <tr>
+      <td>GitHub Flow</td>
+      <td>手動で実施する。<br />運用するブランチは少ない（といいつつtopicブランチの下は多くなる）。<br />開発者ごとにリポジトリを保有する。<br />フォークandプルリク方式。</td>
+    </tr>
+    <tr>
+      <td>Gitlab Flow</td>
+      <td>手動で実施する。<br />運用するブランチは少し多い。<br />リリース対象のブランチを用意する。<br />全員でひとつのリポジトリを参照する。<br />ブランチandマージ方式。</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="git-flow">Git Flow</h2>
+
+<p>おそらくGitを使ったワークフローを探すと一番最初に行き当たる手法。<br />
+運用管理するブランチが少し多いが、Gitのプラグインなどが提供されており、手順の複雑な部分は隠蔽されている。SourceTreeにGUIのインターフェースもある。<br />
+例えば、featureブランチは必ずmasterから分岐し、作業が終わればmasterへマージするなどのルールをプラグインが保証してくれる。<br />
+機能追加の最中に緊急でバグ対応を迫られた場合などの手順が用意されている。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>ブランチ名称</th>
+      <th>機能</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>master</td>
+      <td>すべての基本<br />開発者は基本的にここにはコミットしない<br />いつ何時でも、常にリリースできるような状態を保つ。<br />最後まで生き残る。</td>
+    </tr>
+    <tr>
+      <td>develop</td>
+      <td>作業ブランチ<br />機能追加はここから分岐し、いったんここへ合流する。<br />最後まで生き残る。</td>
+    </tr>
+    <tr>
+      <td>feature</td>
+      <td>機能追加<br />developより分岐し、developへ戻る。<br />作業が済んだらブランチそのものは削除する。</td>
+    </tr>
+    <tr>
+      <td>release</td>
+      <td>リリース準備<br />全ての機能追加作業が済んだら（つまりdevelopから分岐したfeatureが全てマージされて合流したら）、developから分岐する。<br />リリースが無事に完了したら、developとmasterの両方にマージすることで、masterとdevelopの同期を取る。<br />作業が終わったらこのブランチも削除。</td>
+    </tr>
+    <tr>
+      <td>hotfix</td>
+      <td>緊急のバグフィックス<br />これだけはmasterから分岐する。<br />不具合対応が済んだら、これもdevelopとmasterの両方にマージすることで、それぞれのブランチの同期を取る。<br />作業が終わったらこのブランチも削除。</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="sourcetreeを使った場合の手順とか">SourceTreeを使った場合の手順とか</h3>
+
+<ul>
+  <li><a href="https://github.com/snjxnksm/practice_flow/blob/master/readme.adoc">Git-flow</a></li>
+</ul>
+
+<h3 id="参考url">参考URL</h3>
+
+<ul>
+  <li><a href="https://gist.github.com/Getaji/f5fa9b588bf1bfa6e21a">git-flowについて</a> （コマンドラインでの使い方概略）</li>
+  <li><a href="http://qiita.com/KosukeSone/items/514dd24828b485c69a05">Git-flowって何？ Qiita</a></li>
+  <li><a href="http://qiita.com/masatomix/items/5e520591695f21769f11">SourceTree上でGit Flowを動かしてみる Qiita</a></li>
+  <li><a href="http://qiita.com/y_minowa/items/430439448943b21dbff6">git-flowを使った日々の開発フローのふりかえり Qiita</a></li>
+  <li><a href="http://qiita.com/Tamiiy/items/86f122d40ef6b158c2ab">git flow × Pull Request を使ってモダンな開発してみた Qiita</a></li>
+  <li><a href="http://qiita.com/ycoda/items/7faf1863b98eb584daf6">git-flowを使ってGitHubにプルリクエストを送ってみる手順 Qiita</a></li>
+</ul>
+
+<h2 id="github-flow">GitHub Flow</h2>
+
+<p>とくにプラグインやGUIはない。手動で実施する。<br />
+フォーク先からプルリクを送り、それを受け入れることでレビューが完了とする。<br />
+masterブランチは、つねにリリースできるようにする。<br />
+(…ことを人間が気を付ける)</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>ブランチ名称</th>
+      <th>機能</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>master</td>
+      <td>すべての基本<br />つねにリリースできるようにする。</td>
+    </tr>
+    <tr>
+      <td>topic</td>
+      <td>トピックブランチ<br />機能追加・不具合対応に使う。<br />topic/task_name1<br />topic/task_name2<br />などのように、複数のブランチを持つ。</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="参考url-1">参考URL</h3>
+
+<ul>
+  <li><a href="https://gist.github.com/Gab-km/3705015">GitHub Flow 日本語訳</a></li>
+</ul>
+
+<h2 id="gitlab-flow">GitLab Flow</h2>
+
+<p>とくにプラグインやGUIはない。手動で実施する。<br />
+関係者全員は同じリポジトリを見る。フォークはしない。<br />
+リリース用のブランチを用意する。<br />
+GitHubではなく、<a href="https://about.gitlab.com/">Gitlab</a> が元となる。<br />
+Gitlabでは、ブランチでの作業が終わったらマージリクエストを発行する。<br />
+(Githubでも同様の機能はある模様)</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>ブランチ名称</th>
+      <th>機能</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>master</td>
+      <td>すべての基本</td>
+    </tr>
+    <tr>
+      <td>topic</td>
+      <td>機能追加・不具合対応に使う。</td>
+    </tr>
+    <tr>
+      <td>production</td>
+      <td>リリースブランチ</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="参考url-2">参考URL</h3>
+
+<ul>
+  <li><a href="http://shoma2da.hatenablog.com/entry/2015/11/04/233534">アプリ開発にはGitlab flowが合うと思います</a></li>
+  <li><a href="http://postd.cc/gitlab-flow/">GitLab flowから学ぶワークフローの実践</a></li>
+  <li><a href="http://qiita.com/pink/items/8ab3ecc270a9a7db46b4">Pull Request / Merge Request の違い Qiita</a></li>
+  <li><a href="http://blog.qnyp.com/2013/05/28/pull-request-for-github-beginners/">GitHub初心者はForkしない方のPull Requestから入門しよう</a> フォークをしないプルリク +</li>
+</ul>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">snjx.nksm</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>snjx.nksm</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/snjxnksm"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">snjxnksm</span></a>
+
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>いろいろメモしていきますよ。
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

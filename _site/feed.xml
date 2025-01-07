@@ -1,0 +1,1216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>snjx.nksm</title>
+    <description>いろいろメモしていきますよ。
+</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Tue, 07 Jan 2025 22:17:35 +0900</pubDate>
+    <lastBuildDate>Tue, 07 Jan 2025 22:17:35 +0900</lastBuildDate>
+    <generator>Jekyll v4.3.4</generator>
+    
+      <item>
+        <title>Railsで複数のCSVファイルをzipに固めてダウンロードさせる</title>
+        <description>&lt;h1 id=&quot;railsで複数のcsvファイルをzipに固めてダウンロードさせる&quot;&gt;Railsで複数のCSVファイルをzipに固めてダウンロードさせる&lt;/h1&gt;
+
+&lt;p&gt;コントローラの中で、こんな感じでやってやるとイケるはず。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# 一括CSVダウンロード&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;bulkcsv&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;csv_archive.zip&quot;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;fullpath&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/tmp/&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;Zip&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fullpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Zip&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;CREATE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zipfile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;zipfile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get_output_stream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;csv/aaa.csv&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;puts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;no&quot;&gt;CSV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;generate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;encoding: &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Encoding&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;SJIS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;csv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+          &lt;span class=&quot;n&quot;&gt;csv&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;sx&quot;&gt;%w(aaa1 aaa2 aaa3)&lt;/span&gt;
+          &lt;span class=&quot;n&quot;&gt;csv&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;sx&quot;&gt;%w(101 102 103)&lt;/span&gt;
+          &lt;span class=&quot;n&quot;&gt;csv&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;sx&quot;&gt;%w(201 202 203)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;zipfile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get_output_stream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;csv/bbb.csv&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;puts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;no&quot;&gt;CSV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;generate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;encoding: &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Encoding&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;SJIS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;csv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+          &lt;span class=&quot;n&quot;&gt;csv&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;sx&quot;&gt;%w(bbb1 bbb2 bbb3)&lt;/span&gt;
+          &lt;span class=&quot;n&quot;&gt;csv&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;sx&quot;&gt;%w(101 102 103)&lt;/span&gt;
+          &lt;span class=&quot;n&quot;&gt;csv&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;sx&quot;&gt;%w(201 202 203)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# zipをダウンロードして、直後に削除する&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;send_data&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fullpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;filename: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;type: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;application/zip&apos;&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fullpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これで、csv_archive.zip というファイルが落っこちてくる。
+その中には、csvというフォルダが一個ある。
+csvフォルダの中には、aaa.csvとbbb.csvの２ファイルが格納されている。はず。はずだ。&lt;/p&gt;
+
+&lt;p&gt;ポイントは、 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;get_output_stream&lt;/code&gt; メソッド。これで物理ファイルを作らずに直接圧縮されたファイルを出力できる。&lt;/p&gt;
+</description>
+        <pubDate>Fri, 28 Jun 2019 10:20:34 +0900</pubDate>
+        <link>http://localhost:4000/blog/2019/06/28/zip-compression-with-rails.html</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2019/06/28/zip-compression-with-rails.html</guid>
+        
+        <category>ruby</category>
+        
+        <category>rails</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Docker環境でRailsのステップ実行するには</title>
+        <description>&lt;p&gt;docker-compose.ymlに以下、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;stdin_open: true&lt;/code&gt;と&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt; tty: true&lt;/code&gt;を追加して、コンテナを再起動する。&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;version: &apos;3&apos;
+services:
+  #
+  # Railsウェブアプリ
+  #
+  rails_contener:
+    ・
+    ・
+    ・
+    stdin_open: true
+    tty: true
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ターミナルを余分に開き、rails_contenerへアタッチする。&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ docker attach rails_contener
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;アタッチした直後は特に何も出力されないはず。Web画面を操作すると、実行ログがアタッチプロセスの方にも出力される。
+ソースコード中に、 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;require &apos;byebug&apos;; byebug&lt;/code&gt; と１行だけ書いておくと、そこで止めてくれる。&lt;/p&gt;
+
+&lt;p&gt;アタッチしたプロセスから抜ける場合は、ctrl + p と ctrl + q を連続で打つと、コンテナを停止させずに抜け出せる。
+（ここで ctrl + c とかやると、rails_contenerサービス自体が死んでしまうので注意！）&lt;/p&gt;
+</description>
+        <pubDate>Fri, 31 May 2019 17:07:26 +0900</pubDate>
+        <link>http://localhost:4000/blog/2019/05/31/railsbyebugwithdocker.html</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2019/05/31/railsbyebugwithdocker.html</guid>
+        
+        <category>ruby</category>
+        
+        <category>rails</category>
+        
+        <category>docker</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Ruby On Railsで、cronoを使って最小手順でバッチ処理を作る</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#ruby-on-rails-におけるバッチ処理の作り方&quot; id=&quot;markdown-toc-ruby-on-rails-におけるバッチ処理の作り方&quot;&gt;Ruby On Rails におけるバッチ処理の作り方&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#cronoを使用するには&quot; id=&quot;markdown-toc-cronoを使用するには&quot;&gt;cronoを使用するには&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ログ出力切り替えに関して&quot; id=&quot;markdown-toc-ログ出力切り替えに関して&quot;&gt;ログ出力切り替えに関して&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;ruby-on-rails-におけるバッチ処理の作り方&quot;&gt;Ruby On Rails におけるバッチ処理の作り方&lt;/h1&gt;
+
+&lt;p&gt;Railsでのバッチ処理を普通に検索すると、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;whenever&lt;/code&gt;がヒットする。&lt;br /&gt;
+別にこれでもいいんだけど、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;whenever&lt;/code&gt;は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cron&lt;/code&gt;に依存しているのが気に食わない。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker&lt;/code&gt;で環境を作っていたりすると&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cron&lt;/code&gt;デーモンをキックするのに余計な手間がかかる。&lt;br /&gt;
+次点で&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sidekiq&lt;/code&gt;を使う方法も出てくるけど、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sidekiq&lt;/code&gt;は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;redis&lt;/code&gt;が必須要件となっていて、サーバの構成要件に口出しできない立場だったりするとそもそも導入はできない。&lt;/p&gt;
+
+&lt;p&gt;ということで、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;crono&lt;/code&gt;というgemを使って実現する方法を以下に示す。&lt;br /&gt;
+多分これが一番手数が少ない。&lt;/p&gt;
+
+&lt;h2 id=&quot;cronoを使用するには&quot;&gt;cronoを使用するには&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/plashchynski/crono&quot;&gt;A time-based background job scheduler daemon (just like Cron) for Rails&lt;/a&gt;&lt;br /&gt;
+Readmeに書いてあることをほとんどそのままやればよろしい。&lt;/p&gt;
+
+&lt;p&gt;Gemfileに次の２件を追加&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem &apos;crono&apos;
+gem &apos;daemons&apos;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;gemのインストール、cronoのインストール、migrateし直し&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bundle install
+rails generate crono:install
+rails db:environment:set db:drop db:create db:migrate db:seed
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ActiveJobのジェネレータでjobの作成&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rails g job aggregate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ActiveJobが作った &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;app/jobs/application_job.rb&lt;/code&gt; に、 &lt;strong&gt;ログ出力切り替え&lt;/strong&gt; を追加し・・・&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class ApplicationJob &amp;lt; ActiveJob::Base
+  def jobLogger
+    Crono.logger.nil? ? Rails.logger : Crono.logger
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;app/jobs/aggregate_job.rb&lt;/code&gt; に、jobの中身を書いて&lt;br /&gt;
+（ここには書いてないけど、普通にActiveRecordとか使って処理できる）&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class AggregateJob &amp;lt; ApplicationJob
+  queue_as :default
+
+  #
+  # 請求データの月次バッチ
+  #
+  def perform(*_args)
+    # require &apos;byebug&apos;; byebug
+    jobLogger.info &apos;*** start aggregate ***&apos;
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;config/crontab.rb に起動するタイミングを書く。&lt;br /&gt;
+（Crono.performに、上記ActiveJobのジェネレータで作ったクラス名を渡す）&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Crono.perform(TestJob).every 2.days, at: &apos;15:30&apos;
+#
+# Crono.perform(AggregateJob).every 1.minutes
+# Crono.perform(AggregateJob).every 10.second # for test
+
+# 月初に実行
+Crono.perform(AggregateJob).every 1.month, at: &apos;start of the month at 0am&apos;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;cronoデーモンを実行するのは以下&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bundle exec crono start
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails c&lt;/code&gt; などで手動実行する場合は &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AggregateJob.perform_now&lt;/code&gt;&lt;br /&gt;
+（つまり、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails g job&lt;/code&gt;で作ったクラス名とperform_nowメソッド）&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# rails c
+Running via Spring preloader in process 68
+Loading development environment (Rails 5.2.2)
+irb(main):001:0&amp;gt; AggregateJob.perform_now
+Performing AggregateJob (Job ID: d3283fa8-eafd-4703-a30d-d0eb67b20461) from Async(default)
+2019-05-15T11:48:57+09:00  *** start aggregate ***
+Performed AggregateJob (Job ID: d3283fa8-eafd-4703-a30d-d0eb67b20461) from Async(default) in 3.82ms
+=&amp;gt; true
+irb(main):002:0&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;cronoデーモンの実行ログは &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;log/crono.log&lt;/code&gt; に出力される。&lt;/p&gt;
+
+&lt;h2 id=&quot;ログ出力切り替えに関して&quot;&gt;ログ出力切り替えに関して&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ApplicationJob&lt;/code&gt;に &lt;strong&gt;ログ出力切り替え&lt;/strong&gt; を用意した理由は、cronoデーモンで実行された場合には Rails.logger を叩いてくれないから。&lt;/p&gt;
+</description>
+        <pubDate>Wed, 15 May 2019 20:10:39 +0900</pubDate>
+        <link>http://localhost:4000/blog/2019/05/15/usecrono.html</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2019/05/15/usecrono.html</guid>
+        
+        <category>ruby</category>
+        
+        <category>rails</category>
+        
+        <category>gem</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Gitを導入するときにやったこと</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#gitの導入をした話&quot; id=&quot;markdown-toc-gitの導入をした話&quot;&gt;Gitの導入をした話。&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#でこのスライドはどうやって作ったの&quot; id=&quot;markdown-toc-でこのスライドはどうやって作ったの&quot;&gt;で、このスライドはどうやって作ったの？&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;gitの導入をした話&quot;&gt;Gitの導入をした話。&lt;/h1&gt;
+
+&lt;p&gt;とあるチームにGitを導入した時に得た知見を、スライドにしてみた。&lt;br /&gt;
+&lt;a href=&quot;https://snjxnksm.github.io/git_into_the_project/&quot;&gt;Gitを導入するときにやったこと&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;でこのスライドはどうやって作ったの&quot;&gt;で、このスライドはどうやって作ったの？&lt;/h2&gt;
+
+&lt;p&gt;リポジトリは&lt;a href=&quot;https://github.com/snjxnksm/git_into_the_project&quot;&gt;こちら&lt;/a&gt;にある。&lt;br /&gt;
+途中までasciidocで作って、あ、スライドにしようと思い立ったけど、意外とasciidocでスライド作るのって手間がかかる。&lt;br /&gt;
+いくつか方法があるようだけど、その中で一番手間の少なそうなやり方を、&lt;a href=&quot;https://github.com/snjxnksm/git_into_the_project/blob/master/README.md&quot;&gt;リポジトリのreamde&lt;/a&gt;に書いておいた。&lt;br /&gt;
+pythonの&lt;a href=&quot;http://cdk.readthedocs.io/en/latest/&quot;&gt;cdk&lt;/a&gt;を使う。俺的に初python。&lt;/p&gt;
+
+&lt;p&gt;で、&lt;a href=&quot;https://help.github.com/articles/what-is-github-pages/&quot;&gt;Github Pages&lt;/a&gt;の設定をしてやればOK。&lt;/p&gt;
+</description>
+        <pubDate>Sun, 15 Oct 2017 16:33:44 +0900</pubDate>
+        <link>http://localhost:4000/blog/2017/10/15/gitintotheproject.html</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2017/10/15/gitintotheproject.html</guid>
+        
+        <category>Git</category>
+        
+        <category>プロジェクト</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Gitのブランチ戦略</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#gitブランチ戦略&quot; id=&quot;markdown-toc-gitブランチ戦略&quot;&gt;Gitブランチ戦略&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#git-flow&quot; id=&quot;markdown-toc-git-flow&quot;&gt;Git Flow&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#sourcetreeを使った場合の手順とか&quot; id=&quot;markdown-toc-sourcetreeを使った場合の手順とか&quot;&gt;SourceTreeを使った場合の手順とか&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#参考url&quot; id=&quot;markdown-toc-参考url&quot;&gt;参考URL&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#github-flow&quot; id=&quot;markdown-toc-github-flow&quot;&gt;GitHub Flow&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#参考url-1&quot; id=&quot;markdown-toc-参考url-1&quot;&gt;参考URL&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#gitlab-flow&quot; id=&quot;markdown-toc-gitlab-flow&quot;&gt;GitLab Flow&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#参考url-2&quot; id=&quot;markdown-toc-参考url-2&quot;&gt;参考URL&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;gitブランチ戦略&quot;&gt;Gitブランチ戦略&lt;/h1&gt;
+
+&lt;p&gt;Gitを、だね。使うわけだよ。&lt;br /&gt;
+でも、どんな使い方がるあるの？って探した時に、よく似た名前で微妙に違う説明が書いてあって、混乱してしまう。&lt;br /&gt;
+で、以下にざっと目についたブランチ戦略をリストアップしてみた。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;名前&lt;/th&gt;
+      &lt;th&gt;特徴&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Git Flow&lt;/td&gt;
+      &lt;td&gt;一番メジャー&lt;br /&gt;Gitコマンドのプラグインとして作られていて、専用のサブコマンドが用意されている&lt;br /&gt;SourceTree でGUI操作が可能。&lt;br /&gt;運用するブランチが少し多い。&lt;br /&gt;ブランチandマージ方式。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;GitHub Flow&lt;/td&gt;
+      &lt;td&gt;手動で実施する。&lt;br /&gt;運用するブランチは少ない（といいつつtopicブランチの下は多くなる）。&lt;br /&gt;開発者ごとにリポジトリを保有する。&lt;br /&gt;フォークandプルリク方式。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Gitlab Flow&lt;/td&gt;
+      &lt;td&gt;手動で実施する。&lt;br /&gt;運用するブランチは少し多い。&lt;br /&gt;リリース対象のブランチを用意する。&lt;br /&gt;全員でひとつのリポジトリを参照する。&lt;br /&gt;ブランチandマージ方式。&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;git-flow&quot;&gt;Git Flow&lt;/h2&gt;
+
+&lt;p&gt;おそらくGitを使ったワークフローを探すと一番最初に行き当たる手法。&lt;br /&gt;
+運用管理するブランチが少し多いが、Gitのプラグインなどが提供されており、手順の複雑な部分は隠蔽されている。SourceTreeにGUIのインターフェースもある。&lt;br /&gt;
+例えば、featureブランチは必ずmasterから分岐し、作業が終わればmasterへマージするなどのルールをプラグインが保証してくれる。&lt;br /&gt;
+機能追加の最中に緊急でバグ対応を迫られた場合などの手順が用意されている。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;ブランチ名称&lt;/th&gt;
+      &lt;th&gt;機能&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;master&lt;/td&gt;
+      &lt;td&gt;すべての基本&lt;br /&gt;開発者は基本的にここにはコミットしない&lt;br /&gt;いつ何時でも、常にリリースできるような状態を保つ。&lt;br /&gt;最後まで生き残る。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;develop&lt;/td&gt;
+      &lt;td&gt;作業ブランチ&lt;br /&gt;機能追加はここから分岐し、いったんここへ合流する。&lt;br /&gt;最後まで生き残る。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;feature&lt;/td&gt;
+      &lt;td&gt;機能追加&lt;br /&gt;developより分岐し、developへ戻る。&lt;br /&gt;作業が済んだらブランチそのものは削除する。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;release&lt;/td&gt;
+      &lt;td&gt;リリース準備&lt;br /&gt;全ての機能追加作業が済んだら（つまりdevelopから分岐したfeatureが全てマージされて合流したら）、developから分岐する。&lt;br /&gt;リリースが無事に完了したら、developとmasterの両方にマージすることで、masterとdevelopの同期を取る。&lt;br /&gt;作業が終わったらこのブランチも削除。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;hotfix&lt;/td&gt;
+      &lt;td&gt;緊急のバグフィックス&lt;br /&gt;これだけはmasterから分岐する。&lt;br /&gt;不具合対応が済んだら、これもdevelopとmasterの両方にマージすることで、それぞれのブランチの同期を取る。&lt;br /&gt;作業が終わったらこのブランチも削除。&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;sourcetreeを使った場合の手順とか&quot;&gt;SourceTreeを使った場合の手順とか&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/snjxnksm/practice_flow/blob/master/readme.adoc&quot;&gt;Git-flow&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;参考url&quot;&gt;参考URL&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/Getaji/f5fa9b588bf1bfa6e21a&quot;&gt;git-flowについて&lt;/a&gt; （コマンドラインでの使い方概略）&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://qiita.com/KosukeSone/items/514dd24828b485c69a05&quot;&gt;Git-flowって何？ Qiita&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://qiita.com/masatomix/items/5e520591695f21769f11&quot;&gt;SourceTree上でGit Flowを動かしてみる Qiita&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://qiita.com/y_minowa/items/430439448943b21dbff6&quot;&gt;git-flowを使った日々の開発フローのふりかえり Qiita&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://qiita.com/Tamiiy/items/86f122d40ef6b158c2ab&quot;&gt;git flow × Pull Request を使ってモダンな開発してみた Qiita&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://qiita.com/ycoda/items/7faf1863b98eb584daf6&quot;&gt;git-flowを使ってGitHubにプルリクエストを送ってみる手順 Qiita&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;github-flow&quot;&gt;GitHub Flow&lt;/h2&gt;
+
+&lt;p&gt;とくにプラグインやGUIはない。手動で実施する。&lt;br /&gt;
+フォーク先からプルリクを送り、それを受け入れることでレビューが完了とする。&lt;br /&gt;
+masterブランチは、つねにリリースできるようにする。&lt;br /&gt;
+(…ことを人間が気を付ける)&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;ブランチ名称&lt;/th&gt;
+      &lt;th&gt;機能&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;master&lt;/td&gt;
+      &lt;td&gt;すべての基本&lt;br /&gt;つねにリリースできるようにする。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;topic&lt;/td&gt;
+      &lt;td&gt;トピックブランチ&lt;br /&gt;機能追加・不具合対応に使う。&lt;br /&gt;topic/task_name1&lt;br /&gt;topic/task_name2&lt;br /&gt;などのように、複数のブランチを持つ。&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;参考url-1&quot;&gt;参考URL&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/Gab-km/3705015&quot;&gt;GitHub Flow 日本語訳&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;gitlab-flow&quot;&gt;GitLab Flow&lt;/h2&gt;
+
+&lt;p&gt;とくにプラグインやGUIはない。手動で実施する。&lt;br /&gt;
+関係者全員は同じリポジトリを見る。フォークはしない。&lt;br /&gt;
+リリース用のブランチを用意する。&lt;br /&gt;
+GitHubではなく、&lt;a href=&quot;https://about.gitlab.com/&quot;&gt;Gitlab&lt;/a&gt; が元となる。&lt;br /&gt;
+Gitlabでは、ブランチでの作業が終わったらマージリクエストを発行する。&lt;br /&gt;
+(Githubでも同様の機能はある模様)&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;ブランチ名称&lt;/th&gt;
+      &lt;th&gt;機能&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;master&lt;/td&gt;
+      &lt;td&gt;すべての基本&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;topic&lt;/td&gt;
+      &lt;td&gt;機能追加・不具合対応に使う。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;production&lt;/td&gt;
+      &lt;td&gt;リリースブランチ&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;参考url-2&quot;&gt;参考URL&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://shoma2da.hatenablog.com/entry/2015/11/04/233534&quot;&gt;アプリ開発にはGitlab flowが合うと思います&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://postd.cc/gitlab-flow/&quot;&gt;GitLab flowから学ぶワークフローの実践&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://qiita.com/pink/items/8ab3ecc270a9a7db46b4&quot;&gt;Pull Request / Merge Request の違い Qiita&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://blog.qnyp.com/2013/05/28/pull-request-for-github-beginners/&quot;&gt;GitHub初心者はForkしない方のPull Requestから入門しよう&lt;/a&gt; フォークをしないプルリク +&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Sun, 09 Jul 2017 14:40:45 +0900</pubDate>
+        <link>http://localhost:4000/blog/2017/07/09/gitpractice.html</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2017/07/09/gitpractice.html</guid>
+        
+        <category>Git</category>
+        
+        <category>構成管理</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Windows PackegeManagment</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#はじめに&quot; id=&quot;markdown-toc-はじめに&quot;&gt;はじめに&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#準備&quot; id=&quot;markdown-toc-準備&quot;&gt;準備&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#コマンド一覧&quot; id=&quot;markdown-toc-コマンド一覧&quot;&gt;コマンド一覧&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#現在インストールしているもの一覧&quot; id=&quot;markdown-toc-現在インストールしているもの一覧&quot;&gt;現在インストールしているもの一覧&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#インストールできるものを探す&quot; id=&quot;markdown-toc-インストールできるものを探す&quot;&gt;インストールできるものを探す&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#新たにインストール&quot; id=&quot;markdown-toc-新たにインストール&quot;&gt;新たにインストール&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#アンインストール&quot; id=&quot;markdown-toc-アンインストール&quot;&gt;アンインストール&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#chocorateyのリポジトリを使えるようにする&quot; id=&quot;markdown-toc-chocorateyのリポジトリを使えるようにする&quot;&gt;chocorateyのリポジトリを使えるようにする。&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#以上&quot; id=&quot;markdown-toc-以上&quot;&gt;以上&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;はじめに&quot;&gt;はじめに&lt;/h1&gt;
+
+&lt;p&gt;Linuxユーザなら、yumやapt-getなどといったコマンドに普段からお世話になっていると思う。  
+なにかしらシステムを構築しようとした時、これらのパッケージ管理システムがないと、正直途方に暮れてしまう。&lt;br /&gt;
+パッケージ管理システムさえあれば、いちから環境を作成する際にも、インストーラをいちいち探さなくてもすむし楽チンである。&lt;br /&gt;
+ところが、わりと最近まで Windows なんてメジャーなOSに、これに相当するものがなかった。&lt;br /&gt;
+いや、非公式なものであれば chocoratey とかいくつかあるけど、公式なものはなかったはず。そこで出てきたのが、Windows10のPackegeManagmentだ。&lt;/p&gt;
+
+&lt;h2 id=&quot;準備&quot;&gt;準備&lt;/h2&gt;
+
+&lt;p&gt;PackegeManagmentはPoweShellで実行する。&lt;br /&gt;
+cortanaさんに聞いてみるか、コマンドラインを起動して、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;gt; poweshell&lt;/code&gt; と入力してみる。&lt;br /&gt;
+もし、初めて起動したなら、こんな感じで叱られるかもしれない。&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Windows PowerShell
+Copyright (C) 2016 Microsoft Corporation. All rights reserved.
+
+. : このシステムではスクリプトの実行が無効になっているため、ファイル C:\Users\shinj_000\Documents\WindowsPowerShell\Mic
+rosoft.PowerShell_profile.ps1 を読み込むことができません。詳細については、「about_Execution_Policies」(http://go.micros
+oft.com/fwlink/?LinkID=135170) を参照してください。
+発生場所 行:1 文字:3
++ . &apos;C:\Users\shinj_000\Documents\WindowsPowerShell\Microsoft.PowerShel ...
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   + CategoryInfo          : セキュリティ エラー: :slightly_smiling_face: ) []、PSSecurityException
+   + FullyQualifiedErrorId : UnauthorizedAccess
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;起動時にこんな感じのエラーが出たら、スクリプトを使えるようにしておく。&lt;br /&gt;
+まずPwoeShellを管理者権限で起動して、以下のコマンドを実行する。&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;set-executionpolicy remotesigned
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;次からは叱られない。&lt;/p&gt;
+
+&lt;h2 id=&quot;コマンド一覧&quot;&gt;コマンド一覧&lt;/h2&gt;
+
+&lt;p&gt;コマンド一覧の詳細は、microsoft のドキュメントを見て欲しい。  
+&lt;a href=&quot;https://msdn.microsoft.com/ja-jp/powershell/wmf/5.0/oneget_cmdlets&quot;&gt;PackageManagement コマンドレット&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;現在インストールしているもの一覧&quot;&gt;現在インストールしているもの一覧&lt;/h2&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;get-package
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;インストールできるものを探す&quot;&gt;インストールできるものを探す&lt;/h2&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;find-package -name XXXX
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;新たにインストール&quot;&gt;新たにインストール&lt;/h2&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;install-package -name XXXX
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;アンインストール&quot;&gt;アンインストール&lt;/h2&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Uninstall-Package -name XXXX
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;chocorateyのリポジトリを使えるようにする&quot;&gt;chocorateyのリポジトリを使えるようにする。&lt;/h2&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Get-PackageProvider chocolatey
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;以上&quot;&gt;以上&lt;/h2&gt;
+
+&lt;p&gt;まだちょっと動作的に不安定な部分もあって、いまいち信用ならない部分もあるけど、ひとまずは
+以上！&lt;/p&gt;
+</description>
+        <pubDate>Sun, 12 Mar 2017 15:41:11 +0900</pubDate>
+        <link>http://localhost:4000/blog/2017/03/12/windows-packegemanagment.html</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2017/03/12/windows-packegemanagment.html</guid>
+        
+        <category>Windows</category>
+        
+        <category>PackegeManagment</category>
+        
+        <category>PowerShell</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>空っぽのCentos7にコピペで作るRuby環境。</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#はじめに&quot; id=&quot;markdown-toc-はじめに&quot;&gt;はじめに&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#環境作成&quot; id=&quot;markdown-toc-環境作成&quot;&gt;環境作成&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#rbenvruby-buildインストール&quot; id=&quot;markdown-toc-rbenvruby-buildインストール&quot;&gt;rbenv+ruby-buildインストール&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ログインしたユーザでrbenvを使えるようにする&quot; id=&quot;markdown-toc-ログインしたユーザでrbenvを使えるようにする&quot;&gt;ログインしたユーザでrbenvを使えるようにする。&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#rubyのインストール&quot; id=&quot;markdown-toc-rubyのインストール&quot;&gt;rubyのインストール&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#gem-の準備&quot; id=&quot;markdown-toc-gem-の準備&quot;&gt;gem の準備&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#以上&quot; id=&quot;markdown-toc-以上&quot;&gt;以上&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;はじめに&quot;&gt;はじめに&lt;/h1&gt;
+
+&lt;p&gt;空っぽのCentos7にひたすらコピペで作るrbenv+ruby-buildを使ったRubyの最新環境の作り方。&lt;br /&gt;
+とりあえず、rootのパスワードは確認すること。または、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo su&lt;/code&gt;でrootになれるかどうか確認すること&lt;br /&gt;
+あとは、ひたすらコピペ。  
+とにかくコピペ。&lt;/p&gt;
+
+&lt;h1 id=&quot;環境作成&quot;&gt;環境作成&lt;/h1&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo su
+yum groupinstall &quot;Development Tools&quot; -y
+yum install epel-release -y
+yum install -y openssl-devel readline-devel zlib-devel curl-devel libyaml-devel ImageMagick ImageMagick-devel
+yum install nodejs -y
+yum install sqlite-devel -y
+yum install libxml2 libxml2-devel libxslt-devel -y
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;rbenvruby-buildインストール&quot;&gt;rbenv+ruby-buildインストール&lt;/h1&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd /
+git clone https://github.com/sstephenson/rbenv.git usr/local/src/rbenv
+git clone https://github.com/sstephenson/ruby-build.git usr/local/src/rbenv/plugins/ruby-build
+
+echo &apos;export RBENV_ROOT=&quot;/usr/local/src/rbenv/&quot;&apos; &amp;gt;&amp;gt; /etc/profile.d/rbenv.sh
+echo &apos;export PATH=&quot;${RBENV_ROOT}/bin:${PATH}&quot;&apos; &amp;gt;&amp;gt;   /etc/profile.d/rbenv.sh
+echo &apos;eval &quot;$(rbenv init -)&quot;&apos; &amp;gt;&amp;gt;                    /etc/profile.d/rbenv.sh
+cat /etc/profile.d/rbenv.sh
+
+source /etc/profile.d/rbenv.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;ログインしたユーザでrbenvを使えるようにする&quot;&gt;ログインしたユーザでrbenvを使えるようにする。&lt;/h1&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;exit
+source /etc/profile.d/rbenv.sh
+rbenv --version
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;rubyのインストール&quot;&gt;rubyのインストール&lt;/h1&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo su
+
+rbenv install -l
+
+rbenv install 2.3.1
+rbenv global 2.3.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;gem-の準備&quot;&gt;gem の準備&lt;/h1&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem install rbenv-rehash
+gem update --system
+gem install rake
+gem install bundler
+gem install rails
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;以上&quot;&gt;以上&lt;/h1&gt;
+
+&lt;p&gt;以上！&lt;/p&gt;
+</description>
+        <pubDate>Tue, 22 Nov 2016 00:00:00 +0900</pubDate>
+        <link>http://localhost:4000/blog/2016/11/22/installrubytocentos7.html</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2016/11/22/installrubytocentos7.html</guid>
+        
+        <category>Linux</category>
+        
+        <category>Centos7</category>
+        
+        <category>ruby</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Centos7ではネットワークインターフェースをアクティブにするにはnmcliコマンドを使う。</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#はじめに&quot; id=&quot;markdown-toc-はじめに&quot;&gt;はじめに&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#nmcliコマンド&quot; id=&quot;markdown-toc-nmcliコマンド&quot;&gt;nmcliコマンド&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ちなみにcentos6でも&quot; id=&quot;markdown-toc-ちなみにcentos6でも&quot;&gt;ちなみにCentos6でも…&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;はじめに&quot;&gt;はじめに&lt;/h1&gt;
+
+&lt;p&gt;Centos7では、インストール時にネットワークを有効にしていないと、そのままネットワークインターフェースがアクティブになっていない状態になる。  
+つまり、googleを見に行ったりもできないし、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yum update&lt;/code&gt;等もできない。外部からsshログインなどもできない。  
+意外にこれ、気が付かないと無意味にはまって時間ばかり食ったりする。  
+これを、ちゃんと起動するようにする最小限の手順は以下の通り。&lt;br /&gt;
+もちろん、rootでやってね。&lt;/p&gt;
+
+&lt;h1 id=&quot;nmcliコマンド&quot;&gt;nmcliコマンド&lt;/h1&gt;
+
+&lt;p&gt;Cetnos7ではネットワーク管理用のコマンドが提供されている。&lt;/p&gt;
+
+&lt;pre&gt;
+[root@localhost ~]# nmcli device
+DEVICE    TYPE      STATE           CONNECTION
+enp0s3    ethernet  disconnected    --
+lo        loopback  unmanaged       --
+[root@localhost ~]#
+[root@localhost ~]#
+[root@localhost ~]# nmcli con mod enp0s3 connection.autoconnect &quot;yes&quot;
+[root@localhost ~]#
+[root@localhost ~]# nmcli device
+DEVICE    TYPE      STATE         CONNECTION
+enp0s3    ethernet  connected     enp0s3
+lo        loopback  unmanaged     --
+[root@localhost ~]#
+[root@localhost ~]#
+&lt;/pre&gt;
+
+&lt;h1 id=&quot;ちなみにcentos6でも&quot;&gt;ちなみにCentos6でも…&lt;/h1&gt;
+
+&lt;p&gt;ちなみにcentos6でもminimalインストールとかすると、デフォルトではネットワークが有効になってはいない。&lt;br /&gt;
+centos6の場合は特別なコマンドがないので、サービスを止め、設定ファイルを編集して、サービス再開という手順になる。&lt;/p&gt;
+
+&lt;pre&gt;
+[root@localhost ~]# service network stop
+Shutting down loopback interface:          [ OK ]
+
+[root@localhost ~]# vi /etc/sysconfig/network-scripts/ifcfg-eth0
+DEVICE=eth0
+HWADDR=08:00:27:54:04:FC
+TYPE=Ethernet
+UUID=9aff0a74-bc1e-49a7-9992-bd7cc5eca9d3
+ONBOOT=yes
+NM_CONTROLLED=yes     # ←ここを no から yesに書き換える。
+BOOTPROTO=dhcp
+
+[root@localhost ~]# service network start
+Bringing up loopbackInterface:             [ OK ]
+Bringing up integerface eth0:
+Determining IP information for eth0... done.
+                                           [ OK ]
+&lt;/pre&gt;
+</description>
+        <pubDate>Fri, 28 Oct 2016 00:00:00 +0900</pubDate>
+        <link>http://localhost:4000/blog/2016/10/28/centos7_network_setting.html</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2016/10/28/centos7_network_setting.html</guid>
+        
+        <category>Linux</category>
+        
+        <category>Centos7</category>
+        
+        <category>Centos6</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Centos7でnginxをたてて、Jenkinsを使えるようにする。</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#はじめに&quot; id=&quot;markdown-toc-はじめに&quot;&gt;はじめに&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#yumの準備&quot; id=&quot;markdown-toc-yumの準備&quot;&gt;yumの準備&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#firewallのインストールと設定&quot; id=&quot;markdown-toc-firewallのインストールと設定&quot;&gt;firewallのインストールと設定&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#jenkinsインストールと設定&quot; id=&quot;markdown-toc-jenkinsインストールと設定&quot;&gt;jenkinsインストールと設定&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#設定の変更&quot; id=&quot;markdown-toc-設定の変更&quot;&gt;設定の変更&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#jenkins起動&quot; id=&quot;markdown-toc-jenkins起動&quot;&gt;jenkins起動&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#nginx&quot; id=&quot;markdown-toc-nginx&quot;&gt;nginx&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#nginxの設定&quot; id=&quot;markdown-toc-nginxの設定&quot;&gt;nginxの設定&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#管理者ユーザの設定&quot; id=&quot;markdown-toc-管理者ユーザの設定&quot;&gt;管理者ユーザの設定&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;はじめに&quot;&gt;はじめに&lt;/h1&gt;
+
+&lt;p&gt;centos7にnginx、jenkinsを入れて外部からアクセスできるようにする。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;その過程で、systemctlとfirewallの簡単な取り扱いを記述する。&lt;/li&gt;
+  &lt;li&gt;jenkinsは、サブディレクトリで以下のようにアクセスできるようにする。&lt;br /&gt;
+  &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http://example.com/jenkins&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;nginxの設定で、サブディレクトリで受け取ったアクセスを、ポートフォワーディングで内部で動作しているjenkinsに引き渡すようにする。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;想定は、最低限のセットアップはされていて、SELinuxは停止していて、SSH接続は可能であり、root権限を持っているサーバを対象とする。&lt;/p&gt;
+
+&lt;h1 id=&quot;yumの準備&quot;&gt;yumの準備&lt;/h1&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;yum用ライブラリの追加&lt;br /&gt;
+ EPELを追加
+    &lt;pre&gt;
+ yum install epel-release -y
+ &lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;update
+    &lt;pre&gt;
+ yum update
+ &lt;/pre&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&quot;firewallのインストールと設定&quot;&gt;firewallのインストールと設定&lt;/h1&gt;
+
+&lt;p&gt;firewallをインストールし、外部からのアクセスをポート80(http)に限定する。&lt;br /&gt;
+（nginxとjenkinsはポート8080で通信するが、localhostを使うので、firewallの設定はしない）&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;firewall をインストール
+    &lt;pre&gt;
+ yum install -y firewall
+ &lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;firewall を有効化
+    &lt;pre&gt;
+ systemctl enable firewalld
+ systemctl start firewalld
+ &lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;ポートを開ける
+    &lt;pre&gt;
+ firewall-cmd --add-port=80/tcp --zone=public --permanent
+ firewall-cmd --reload
+ firewall-cmd --list-all
+ &lt;/pre&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&quot;jenkinsインストールと設定&quot;&gt;jenkinsインストールと設定&lt;/h1&gt;
+
+&lt;p&gt;jenkinsのリポジトリを登録してインストールする。&lt;/p&gt;
+
+&lt;pre&gt;
+# wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+# rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+&lt;/pre&gt;
+&lt;pre&gt;
+# yum -y install jenkins
+&lt;/pre&gt;
+
+&lt;h2 id=&quot;設定の変更&quot;&gt;設定の変更&lt;/h2&gt;
+
+&lt;p&gt;nginxと連携するための設定を記述する。&lt;/p&gt;
+
+&lt;pre&gt;
+# vi /etc/sysconfig/jenkins
+# このなかの、JENKINS_ARGSへ起動パラメータを追加する。
+JENKINS_ARGS=&quot;--prefix=/jenkins --httpListenAddress=127.0.0.1&quot;
+&lt;/pre&gt;
+
+&lt;h2 id=&quot;jenkins起動&quot;&gt;jenkins起動&lt;/h2&gt;
+
+&lt;pre&gt;
+# systemctl start jenkins
+&lt;/pre&gt;
+
+&lt;h1 id=&quot;nginx&quot;&gt;nginx&lt;/h1&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;nginx インストール&lt;/p&gt;
+
+    &lt;pre&gt;
+ yum install -y nginx
+ &lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;サービススタート&lt;/p&gt;
+
+    &lt;pre&gt;
+ systemctl enable nginx
+ systemctl start nginx
+ &lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;ステータス確認&lt;/p&gt;
+
+    &lt;pre&gt;
+ systemctl status nginx
+ &lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;サービス停止&lt;/p&gt;
+    &lt;pre&gt;
+ systemctl stop nginx
+ &lt;/pre&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;nginxの設定&quot;&gt;nginxの設定&lt;/h2&gt;
+
+&lt;p&gt;「location」でサブディレクトリを指定して、そのさきにjenkinsをつなげる。&lt;br /&gt;
+/etc/nginx/nginx.conf に以下を追加。&lt;/p&gt;
+
+&lt;pre&gt;
+  [root@localhost log]# cat /etc/nginx/nginx.conf
+  # For more information on configuration, see:
+  #   * Official English Documentation: http://nginx.org/en/docs/
+  #   * Official Russian Documentation: http://nginx.org/ru/docs/
+
+  user nginx;
+  worker_processes auto;
+  error_log /var/log/nginx/error.log;
+  pid /run/nginx.pid;
+
+  # Load dynamic modules. See /usr/share/nginx/README.dynamic.
+  include /usr/share/nginx/modules/*.conf;
+
+  events {
+      worker_connections 1024;
+  }
+
+  http {
+      log_format  main  &apos;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &apos;
+                        &apos;$status $body_bytes_sent &quot;$http_referer&quot; &apos;
+                        &apos;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&apos;;
+
+      access_log  /var/log/nginx/access.log  main;
+
+      sendfile            on;
+      tcp_nopush          on;
+      tcp_nodelay         on;
+      keepalive_timeout   65;
+      types_hash_max_size 2048;
+
+      include             /etc/nginx/mime.types;
+      default_type        application/octet-stream;
+
+      # Load modular configuration files from the /etc/nginx/conf.d directory.
+      # See http://nginx.org/en/docs/ngx_core_module.html#include
+      # for more information.
+      include /etc/nginx/conf.d/*.conf;
+
+      server {
+          listen       80 default_server;
+          listen       [::]:80 default_server;
+          server_name  _;
+          root         /usr/share/nginx/html;
+
+          # Load configuration files for the default server block.
+          include /etc/nginx/default.d/*.conf;
+
+          location / {
+          }
+
+          ##  Jenkins向け設定 ここから
+          location /jenkins {
+              proxy_pass http://localhost:8080/jenkins;
+          }
+          ## ここまで
+
+          error_page 404 /404.html;
+              location = /40x.html {
+          }
+
+          error_page 500 502 503 504 /50x.html;
+              location = /50x.html {
+          }
+      }
+
+  }
+
+  &lt;/pre&gt;
+
+&lt;p&gt;設定を変更したあと、systemctlでnginxを再起動。&lt;/p&gt;
+
+&lt;h2 id=&quot;管理者ユーザの設定&quot;&gt;管理者ユーザの設定&lt;/h2&gt;
+
+&lt;p&gt;これで、通常のhttpにてjenkinsが動作しているはず。&lt;br /&gt;
+ブラウザで &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http://example.com/jenkins&lt;/code&gt; にログインすると、権限を設定せよという画面出てくる。&lt;br /&gt;
+Administrator Password欄に、画面に指示されているファイルの中身を入力する。&lt;br /&gt;
+そのあとは初期設定を実行する。
+初期設定画面では、プラグインの指定と全権管理者を設定する。&lt;/p&gt;
+</description>
+        <pubDate>Fri, 30 Sep 2016 00:00:00 +0900</pubDate>
+        <link>http://localhost:4000/blog/2016/09/30/nginx_jenkins.html</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2016/09/30/nginx_jenkins.html</guid>
+        
+        <category>Linux</category>
+        
+        <category>Centos7</category>
+        
+        <category>nginx</category>
+        
+        <category>Jenkins</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Centos7でJenkinsサーバをたてる。</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#はじめに&quot; id=&quot;markdown-toc-はじめに&quot;&gt;はじめに&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#仮想マシンの用意&quot; id=&quot;markdown-toc-仮想マシンの用意&quot;&gt;仮想マシンの用意&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#virtualboxをインストール&quot; id=&quot;markdown-toc-virtualboxをインストール&quot;&gt;virtualboxをインストール&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#centos7を取得&quot; id=&quot;markdown-toc-centos7を取得&quot;&gt;centos7を取得&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#仮想マシン作成&quot; id=&quot;markdown-toc-仮想マシン作成&quot;&gt;仮想マシン作成&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#実行環境インストール&quot; id=&quot;markdown-toc-実行環境インストール&quot;&gt;実行環境インストール&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#guestadditionsインストール&quot; id=&quot;markdown-toc-guestadditionsインストール&quot;&gt;GuestAdditionsインストール&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#jenkins-インストール&quot; id=&quot;markdown-toc-jenkins-インストール&quot;&gt;Jenkins インストール&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#yumの準備&quot; id=&quot;markdown-toc-yumの準備&quot;&gt;yumの準備&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#jenkinsをインストール&quot; id=&quot;markdown-toc-jenkinsをインストール&quot;&gt;jenkinsをインストール&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#jenkins起動&quot; id=&quot;markdown-toc-jenkins起動&quot;&gt;jenkins起動&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#管理者ユーザの設定&quot; id=&quot;markdown-toc-管理者ユーザの設定&quot;&gt;管理者ユーザの設定&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#プラグインの登録&quot; id=&quot;markdown-toc-プラグインの登録&quot;&gt;プラグインの登録&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#外部のマシンのブラウザで仮想マシンのjenkinsを覗く設定&quot; id=&quot;markdown-toc-外部のマシンのブラウザで仮想マシンのjenkinsを覗く設定&quot;&gt;外部のマシンのブラウザで仮想マシンのJenkinsを覗く設定&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#仮想マシンにfirewallをインストールする&quot; id=&quot;markdown-toc-仮想マシンにfirewallをインストールする&quot;&gt;仮想マシンにfirewallをインストールする。&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ポートフォワーディングの設定をする&quot; id=&quot;markdown-toc-ポートフォワーディングの設定をする&quot;&gt;ポートフォワーディングの設定をする。&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;はじめに&quot;&gt;はじめに&lt;/h1&gt;
+
+&lt;p&gt;ローカルPCにcentos7サーバを立てて、Jenkinsをインストールするまでの手順を書く。&lt;/p&gt;
+
+&lt;h1 id=&quot;仮想マシンの用意&quot;&gt;仮想マシンの用意&lt;/h1&gt;
+
+&lt;p&gt;割と有名なvirtualboxを使ってみる。&lt;/p&gt;
+
+&lt;h2 id=&quot;virtualboxをインストール&quot;&gt;virtualboxをインストール&lt;/h2&gt;
+
+&lt;p&gt;https://www.virtualbox.org/&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.virtualbox.org/wiki/Downloads&quot;&gt;ダウンロードページ&lt;/a&gt;から各プラットフォームにあったものを選んでインストールする。&lt;/p&gt;
+
+&lt;h2 id=&quot;centos7を取得&quot;&gt;centos7を取得&lt;/h2&gt;
+
+&lt;p&gt;https://www.centos.org/download/&lt;br /&gt;
+&lt;em&gt;DVD ISO&lt;/em&gt; をクリックすると、最小限セットのisoファイルが手に入る。&lt;br /&gt;
+通常はこれをDVDなどに焼き付けるが、今回はこのまま使用する。&lt;br /&gt;
+（実行時の最新を利用すれば問題なし）&lt;br /&gt;
+適当なフォルダにダウンロードしておく。&lt;/p&gt;
+
+&lt;h2 id=&quot;仮想マシン作成&quot;&gt;仮想マシン作成&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;virtualboxを起動し、「新規(n)」をクリック&lt;/li&gt;
+  &lt;li&gt;仮想マシンを作成する。
+    &lt;ol&gt;
+      &lt;li&gt;適当な名前をつける。&lt;/li&gt;
+      &lt;li&gt;タイプを「Linux」にする&lt;/li&gt;
+      &lt;li&gt;バージョンを「Red Hat (64-bit)」にする&lt;/li&gt;
+      &lt;li&gt;メモリサイズは、1024くらいにしておく（あとで変更可能）&lt;/li&gt;
+      &lt;li&gt;「仮想ハードディスクを作成する」を選択する&lt;/li&gt;
+      &lt;li&gt;ハードディスクの設定を行う
+        &lt;ol&gt;
+          &lt;li&gt;ファイルサイズは、ホストマシンの空き容量をみて、適当に。&lt;br /&gt;
+  30GBくらいでいいんじゃないですか？&lt;br /&gt;
+  ただし、ハードディスクのサイズをあとで変更しようとするとかなり面倒なので、適当かつ慎重に。&lt;/li&gt;
+          &lt;li&gt;ファイルタイプは VDI が推奨。&lt;/li&gt;
+          &lt;li&gt;ストレージは「可変サイズ」を選択。&lt;/li&gt;
+        &lt;/ol&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Centos7のDVDイメージを仮想マシンに挿入する。
+    &lt;ol&gt;
+      &lt;li&gt;新たに作成され、「電源オフ」状態の仮想マシンを選択する。&lt;/li&gt;
+      &lt;li&gt;「設定(S)」をクリック
+        &lt;ol&gt;
+          &lt;li&gt;ストレージをクリック&lt;br /&gt;
+    3211. 「空」となっている光学ドライブを選択&lt;br /&gt;
+    3212. 「属性」の部分の光学媒体のアイコンをクリックしてアイコンをクリックしてファイルを選択&lt;br /&gt;
+    3213. ダウンロードして来たCentOS-7-x86_64-DVD-1511.isoを選択する。&lt;/li&gt;
+        &lt;/ol&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;仮想マシンを起動する。&lt;br /&gt;
+  「起動(T)」クリック。&lt;/li&gt;
+  &lt;li&gt;Centos7インストーラを設定する。&lt;br /&gt;
+  最低限必要なのは、「インストール先(D)」の設定。&lt;br /&gt;
+  一度、「インストール先」画面に移動してデフォルトのディスクにチェックが立っていることを確認して「完了」をクリックする。&lt;br /&gt;
+  作りたい環境に合わせて、「ソフトウェアの選択」で環境を作成する。&lt;br /&gt;
+  あえていばらの道を行きたければ、デフォルトである「最小限のインストール」でOK。ただし、この設定だとホントにコマンドラインしかインストールされない。  ß
+  そうでもない普通の人は、「サーバ(GUI使用)」に「開発ツール」アドオンをつけた構成がおすすめ。
+    &lt;ol&gt;
+      &lt;li&gt;インストール中に root パスワードは入れておくこと&lt;/li&gt;
+      &lt;li&gt;管理ユーザの作成も実行しておく。&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;インストールが終了したら「再起動(R)」&lt;/li&gt;
+  &lt;li&gt;再起動したら　License の同意をする。&lt;/li&gt;
+  &lt;li&gt;再起動した直後は &lt;em&gt;ネットワークがオフ&lt;/em&gt; になっている。&lt;br /&gt;
+ まずはネットワークを接続すること。GUIをインストールしたら設定画面から辿れる。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&quot;実行環境インストール&quot;&gt;実行環境インストール&lt;/h1&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;GUI&lt;br /&gt;
+ 以下は、Centos7インストーラで「サーバ(GUI使用)」を選択した場合と同等の作業。&lt;br /&gt;
+ 結構時間がかかる。
+    &lt;pre&gt;
+ sudo yum -y groupinstall &quot;Server with GUI&quot;
+ sudo yum -y install alacarte
+ &lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Java&lt;br /&gt;
+以下は、Centos7インストーラで「Javaプラットフォーム」アドオンを選択した場合と同等の作業。
+jenkinsを走らせるのに必要。
+    &lt;pre&gt;
+yum -y install java-1.8.0-openjdk
+yum -y install java-1.8.0-openjdk-devel
+&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;開発環境インストール&lt;br /&gt;
+以下は、後述のGuestAdditionsをインストールする際に必要になる。
+    &lt;pre&gt;
+yum -y update kernel    
+yum -y install epel-release
+yum install -y bzip2 gcc make kernel-devel kernel-headers dkms gcc-c++
+&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;日本語環境
+    &lt;pre&gt;
+localectl set-locale LANG=ja_JP.UTF-8
+systemctl set-default graphical.target
+&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;gitインストール
+    &lt;pre&gt;
+yum install git -y
+&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;yum updateしておく
+ 結構時間がかかるので覚悟してやる。
+    &lt;pre&gt;
+ yum -y update
+ &lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;再起動
+    &lt;pre&gt;
+reboot
+&lt;/pre&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;guestadditionsインストール&quot;&gt;GuestAdditionsインストール&lt;/h2&gt;
+&lt;p&gt;マウスカーソルのシームレスな移動や、ホストとゲストの間のクリップボード経由のコピペなどをやりたい場合は、GuestAdditionsCDを仮想マシンにインストールする。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;VMのメニュー→デバイス→GuestAdditionsCDイメージの挿入&lt;/li&gt;
+  &lt;li&gt;実行するかどうか聞かれるので実行する。&lt;/li&gt;
+  &lt;li&gt;無事に実行できたら、再起動&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;jenkins-インストール&quot;&gt;Jenkins インストール&lt;/h1&gt;
+
+&lt;p&gt;以下の手順は、Jenkins単体で動作させる場合。&lt;/p&gt;
+
+&lt;h2 id=&quot;yumの準備&quot;&gt;yumの準備&lt;/h2&gt;
+&lt;p&gt;jenkinsのリポジトリを登録する。&lt;br /&gt;
+rootで実行すること。&lt;/p&gt;
+
+&lt;pre&gt;
+# wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+# rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+&lt;/pre&gt;
+
+&lt;h2 id=&quot;jenkinsをインストール&quot;&gt;jenkinsをインストール&lt;/h2&gt;
+
+&lt;pre&gt;
+# yum -y install jenkins
+&lt;/pre&gt;
+
+&lt;h2 id=&quot;jenkins起動&quot;&gt;jenkins起動&lt;/h2&gt;
+
+&lt;pre&gt;
+# systemctl start jenkins
+&lt;/pre&gt;
+
+&lt;h2 id=&quot;管理者ユーザの設定&quot;&gt;管理者ユーザの設定&lt;/h2&gt;
+
+&lt;p&gt;ここまでの作業で、8080ポートにてjenkinsが動作しているはず。&lt;br /&gt;
+バンドルされているfirefoxなどのブラウザで http://localhost:8080 にログインすると、権限を設定せよという画面出てくる。&lt;br /&gt;
+Administrator Password欄に、画面に指示されているファイルの中身を入力する。&lt;br /&gt;
+そのあとは初期設定を実行する。
+初期設定画面では、プラグインの指定と全権管理者を設定する。&lt;/p&gt;
+
+&lt;h2 id=&quot;プラグインの登録&quot;&gt;プラグインの登録&lt;/h2&gt;
+&lt;p&gt;Jenkinsのトップ＞「Jenkinsの管理」＞「プラグインの管理」&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Gradle plugin 追加&lt;/li&gt;
+  &lt;li&gt;scm-api plugin 追加&lt;/li&gt;
+  &lt;li&gt;Git plugin 追加&lt;/li&gt;
+  &lt;li&gt;PegDown Formatter Plugin 追加&lt;/li&gt;
+  &lt;li&gt;Publish Over SSH Plugin 追加&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;外部のマシンのブラウザで仮想マシンのjenkinsを覗く設定&quot;&gt;外部のマシンのブラウザで仮想マシンのJenkinsを覗く設定&lt;/h1&gt;
+
+&lt;p&gt;以下の設定を施すと、外部から仮想マシンの8080ポートを覗けるようになる。&lt;/p&gt;
+
+&lt;h2 id=&quot;仮想マシンにfirewallをインストールする&quot;&gt;仮想マシンにfirewallをインストールする。&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;firewall をインストール
+    &lt;pre&gt;
+ yum install -y firewall
+ &lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;firewall を有効化
+    &lt;pre&gt;
+ systemctl enable firewalld
+ systemctl start firewalld
+ &lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;ポートを開ける
+    &lt;pre&gt;
+ firewall-cmd --add-port=8080/tcp --zone=public --permanent
+ firewall-cmd --reload
+ firewall-cmd --list-ports --zone=public
+ &lt;/pre&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;ポートフォワーディングの設定をする&quot;&gt;ポートフォワーディングの設定をする。&lt;/h2&gt;
+
+&lt;p&gt;virtualbox-&amp;gt;Jenkins(VM)-&amp;gt;設定-&amp;gt;ネットワーク（アダプタ１）（高度）-&amp;gt;ポートフォワーディング&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;名前&lt;/th&gt;
+      &lt;th&gt;プロトコル&lt;/th&gt;
+      &lt;th&gt;ホストIP&lt;/th&gt;
+      &lt;th&gt;ホストポート&lt;/th&gt;
+      &lt;th&gt;ゲストIP&lt;/th&gt;
+      &lt;th&gt;ゲストポート&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;jenkins&lt;/td&gt;
+      &lt;td&gt;TCP&lt;/td&gt;
+      &lt;td&gt;(空白)&lt;/td&gt;
+      &lt;td&gt;8080&lt;/td&gt;
+      &lt;td&gt;(空白)&lt;/td&gt;
+      &lt;td&gt;8080&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+        <pubDate>Thu, 29 Sep 2016 00:00:00 +0900</pubDate>
+        <link>http://localhost:4000/blog/2016/09/29/create_centos7_jenkins.html</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2016/09/29/create_centos7_jenkins.html</guid>
+        
+        <category>virtualbox</category>
+        
+        <category>Linux</category>
+        
+        <category>Centos7</category>
+        
+        <category>Jenkins</category>
+        
+        
+      </item>
+    
+  </channel>
+</rss>

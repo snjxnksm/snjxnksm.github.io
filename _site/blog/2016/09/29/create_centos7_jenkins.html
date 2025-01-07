@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Centos7でJenkinsサーバをたてる。</title>
+  <meta name="description" content="">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2016/09/29/create_centos7_jenkins.html">
+  <link rel="alternate" type="application/rss+xml" title="snjx.nksm" href="http://localhost:4000/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">snjx.nksm</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/tags">Posts By Tags</a>
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          
+
+
+
+<span class="post-meta">
+
+  
+  <div
+    class="post-tags">
+    
+      <a href="/tags#virtualbox">
+        virtualbox
+      </a>
+    
+      <a href="/tags#Linux">
+        Linux
+      </a>
+    
+      <a href="/tags#Centos7">
+        Centos7
+      </a>
+    
+      <a href="/tags#Jenkins">
+        Jenkins
+      </a>
+    
+  </div>
+</span>
+
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Centos7でJenkinsサーバをたてる。</h1>
+    <p class="post-meta"><time datetime="2016-09-29T00:00:00+09:00" itemprop="datePublished">Sep 29, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <ul id="markdown-toc">
+  <li><a href="#はじめに" id="markdown-toc-はじめに">はじめに</a></li>
+  <li><a href="#仮想マシンの用意" id="markdown-toc-仮想マシンの用意">仮想マシンの用意</a>    <ul>
+      <li><a href="#virtualboxをインストール" id="markdown-toc-virtualboxをインストール">virtualboxをインストール</a></li>
+      <li><a href="#centos7を取得" id="markdown-toc-centos7を取得">centos7を取得</a></li>
+      <li><a href="#仮想マシン作成" id="markdown-toc-仮想マシン作成">仮想マシン作成</a></li>
+    </ul>
+  </li>
+  <li><a href="#実行環境インストール" id="markdown-toc-実行環境インストール">実行環境インストール</a>    <ul>
+      <li><a href="#guestadditionsインストール" id="markdown-toc-guestadditionsインストール">GuestAdditionsインストール</a></li>
+    </ul>
+  </li>
+  <li><a href="#jenkins-インストール" id="markdown-toc-jenkins-インストール">Jenkins インストール</a>    <ul>
+      <li><a href="#yumの準備" id="markdown-toc-yumの準備">yumの準備</a></li>
+      <li><a href="#jenkinsをインストール" id="markdown-toc-jenkinsをインストール">jenkinsをインストール</a></li>
+      <li><a href="#jenkins起動" id="markdown-toc-jenkins起動">jenkins起動</a></li>
+      <li><a href="#管理者ユーザの設定" id="markdown-toc-管理者ユーザの設定">管理者ユーザの設定</a></li>
+      <li><a href="#プラグインの登録" id="markdown-toc-プラグインの登録">プラグインの登録</a></li>
+    </ul>
+  </li>
+  <li><a href="#外部のマシンのブラウザで仮想マシンのjenkinsを覗く設定" id="markdown-toc-外部のマシンのブラウザで仮想マシンのjenkinsを覗く設定">外部のマシンのブラウザで仮想マシンのJenkinsを覗く設定</a>    <ul>
+      <li><a href="#仮想マシンにfirewallをインストールする" id="markdown-toc-仮想マシンにfirewallをインストールする">仮想マシンにfirewallをインストールする。</a></li>
+      <li><a href="#ポートフォワーディングの設定をする" id="markdown-toc-ポートフォワーディングの設定をする">ポートフォワーディングの設定をする。</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="はじめに">はじめに</h1>
+
+<p>ローカルPCにcentos7サーバを立てて、Jenkinsをインストールするまでの手順を書く。</p>
+
+<h1 id="仮想マシンの用意">仮想マシンの用意</h1>
+
+<p>割と有名なvirtualboxを使ってみる。</p>
+
+<h2 id="virtualboxをインストール">virtualboxをインストール</h2>
+
+<p>https://www.virtualbox.org/</p>
+
+<p><a href="https://www.virtualbox.org/wiki/Downloads">ダウンロードページ</a>から各プラットフォームにあったものを選んでインストールする。</p>
+
+<h2 id="centos7を取得">centos7を取得</h2>
+
+<p>https://www.centos.org/download/<br />
+<em>DVD ISO</em> をクリックすると、最小限セットのisoファイルが手に入る。<br />
+通常はこれをDVDなどに焼き付けるが、今回はこのまま使用する。<br />
+（実行時の最新を利用すれば問題なし）<br />
+適当なフォルダにダウンロードしておく。</p>
+
+<h2 id="仮想マシン作成">仮想マシン作成</h2>
+
+<ol>
+  <li>virtualboxを起動し、「新規(n)」をクリック</li>
+  <li>仮想マシンを作成する。
+    <ol>
+      <li>適当な名前をつける。</li>
+      <li>タイプを「Linux」にする</li>
+      <li>バージョンを「Red Hat (64-bit)」にする</li>
+      <li>メモリサイズは、1024くらいにしておく（あとで変更可能）</li>
+      <li>「仮想ハードディスクを作成する」を選択する</li>
+      <li>ハードディスクの設定を行う
+        <ol>
+          <li>ファイルサイズは、ホストマシンの空き容量をみて、適当に。<br />
+  30GBくらいでいいんじゃないですか？<br />
+  ただし、ハードディスクのサイズをあとで変更しようとするとかなり面倒なので、適当かつ慎重に。</li>
+          <li>ファイルタイプは VDI が推奨。</li>
+          <li>ストレージは「可変サイズ」を選択。</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li>Centos7のDVDイメージを仮想マシンに挿入する。
+    <ol>
+      <li>新たに作成され、「電源オフ」状態の仮想マシンを選択する。</li>
+      <li>「設定(S)」をクリック
+        <ol>
+          <li>ストレージをクリック<br />
+    3211. 「空」となっている光学ドライブを選択<br />
+    3212. 「属性」の部分の光学媒体のアイコンをクリックしてアイコンをクリックしてファイルを選択<br />
+    3213. ダウンロードして来たCentOS-7-x86_64-DVD-1511.isoを選択する。</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li>仮想マシンを起動する。<br />
+  「起動(T)」クリック。</li>
+  <li>Centos7インストーラを設定する。<br />
+  最低限必要なのは、「インストール先(D)」の設定。<br />
+  一度、「インストール先」画面に移動してデフォルトのディスクにチェックが立っていることを確認して「完了」をクリックする。<br />
+  作りたい環境に合わせて、「ソフトウェアの選択」で環境を作成する。<br />
+  あえていばらの道を行きたければ、デフォルトである「最小限のインストール」でOK。ただし、この設定だとホントにコマンドラインしかインストールされない。  ß
+  そうでもない普通の人は、「サーバ(GUI使用)」に「開発ツール」アドオンをつけた構成がおすすめ。
+    <ol>
+      <li>インストール中に root パスワードは入れておくこと</li>
+      <li>管理ユーザの作成も実行しておく。</li>
+    </ol>
+  </li>
+  <li>インストールが終了したら「再起動(R)」</li>
+  <li>再起動したら　License の同意をする。</li>
+  <li>再起動した直後は <em>ネットワークがオフ</em> になっている。<br />
+ まずはネットワークを接続すること。GUIをインストールしたら設定画面から辿れる。</li>
+</ol>
+
+<h1 id="実行環境インストール">実行環境インストール</h1>
+
+<ol>
+  <li>GUI<br />
+ 以下は、Centos7インストーラで「サーバ(GUI使用)」を選択した場合と同等の作業。<br />
+ 結構時間がかかる。
+    <pre>
+ sudo yum -y groupinstall "Server with GUI"
+ sudo yum -y install alacarte
+ </pre>
+  </li>
+  <li>Java<br />
+以下は、Centos7インストーラで「Javaプラットフォーム」アドオンを選択した場合と同等の作業。
+jenkinsを走らせるのに必要。
+    <pre>
+yum -y install java-1.8.0-openjdk
+yum -y install java-1.8.0-openjdk-devel
+</pre>
+  </li>
+  <li>開発環境インストール<br />
+以下は、後述のGuestAdditionsをインストールする際に必要になる。
+    <pre>
+yum -y update kernel    
+yum -y install epel-release
+yum install -y bzip2 gcc make kernel-devel kernel-headers dkms gcc-c++
+</pre>
+  </li>
+  <li>日本語環境
+    <pre>
+localectl set-locale LANG=ja_JP.UTF-8
+systemctl set-default graphical.target
+</pre>
+  </li>
+  <li>gitインストール
+    <pre>
+yum install git -y
+</pre>
+  </li>
+  <li>yum updateしておく
+ 結構時間がかかるので覚悟してやる。
+    <pre>
+ yum -y update
+ </pre>
+  </li>
+  <li>再起動
+    <pre>
+reboot
+</pre>
+  </li>
+</ol>
+
+<h2 id="guestadditionsインストール">GuestAdditionsインストール</h2>
+<p>マウスカーソルのシームレスな移動や、ホストとゲストの間のクリップボード経由のコピペなどをやりたい場合は、GuestAdditionsCDを仮想マシンにインストールする。</p>
+
+<ul>
+  <li>VMのメニュー→デバイス→GuestAdditionsCDイメージの挿入</li>
+  <li>実行するかどうか聞かれるので実行する。</li>
+  <li>無事に実行できたら、再起動</li>
+</ul>
+
+<h1 id="jenkins-インストール">Jenkins インストール</h1>
+
+<p>以下の手順は、Jenkins単体で動作させる場合。</p>
+
+<h2 id="yumの準備">yumの準備</h2>
+<p>jenkinsのリポジトリを登録する。<br />
+rootで実行すること。</p>
+
+<pre>
+# wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+# rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+</pre>
+
+<h2 id="jenkinsをインストール">jenkinsをインストール</h2>
+
+<pre>
+# yum -y install jenkins
+</pre>
+
+<h2 id="jenkins起動">jenkins起動</h2>
+
+<pre>
+# systemctl start jenkins
+</pre>
+
+<h2 id="管理者ユーザの設定">管理者ユーザの設定</h2>
+
+<p>ここまでの作業で、8080ポートにてjenkinsが動作しているはず。<br />
+バンドルされているfirefoxなどのブラウザで http://localhost:8080 にログインすると、権限を設定せよという画面出てくる。<br />
+Administrator Password欄に、画面に指示されているファイルの中身を入力する。<br />
+そのあとは初期設定を実行する。
+初期設定画面では、プラグインの指定と全権管理者を設定する。</p>
+
+<h2 id="プラグインの登録">プラグインの登録</h2>
+<p>Jenkinsのトップ＞「Jenkinsの管理」＞「プラグインの管理」</p>
+
+<ul>
+  <li>Gradle plugin 追加</li>
+  <li>scm-api plugin 追加</li>
+  <li>Git plugin 追加</li>
+  <li>PegDown Formatter Plugin 追加</li>
+  <li>Publish Over SSH Plugin 追加</li>
+</ul>
+
+<h1 id="外部のマシンのブラウザで仮想マシンのjenkinsを覗く設定">外部のマシンのブラウザで仮想マシンのJenkinsを覗く設定</h1>
+
+<p>以下の設定を施すと、外部から仮想マシンの8080ポートを覗けるようになる。</p>
+
+<h2 id="仮想マシンにfirewallをインストールする">仮想マシンにfirewallをインストールする。</h2>
+
+<ol>
+  <li>firewall をインストール
+    <pre>
+ yum install -y firewall
+ </pre>
+  </li>
+  <li>firewall を有効化
+    <pre>
+ systemctl enable firewalld
+ systemctl start firewalld
+ </pre>
+  </li>
+  <li>ポートを開ける
+    <pre>
+ firewall-cmd --add-port=8080/tcp --zone=public --permanent
+ firewall-cmd --reload
+ firewall-cmd --list-ports --zone=public
+ </pre>
+  </li>
+</ol>
+
+<h2 id="ポートフォワーディングの設定をする">ポートフォワーディングの設定をする。</h2>
+
+<p>virtualbox-&gt;Jenkins(VM)-&gt;設定-&gt;ネットワーク（アダプタ１）（高度）-&gt;ポートフォワーディング</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>名前</th>
+      <th>プロトコル</th>
+      <th>ホストIP</th>
+      <th>ホストポート</th>
+      <th>ゲストIP</th>
+      <th>ゲストポート</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>jenkins</td>
+      <td>TCP</td>
+      <td>(空白)</td>
+      <td>8080</td>
+      <td>(空白)</td>
+      <td>8080</td>
+    </tr>
+  </tbody>
+</table>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">snjx.nksm</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>snjx.nksm</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/snjxnksm"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">snjxnksm</span></a>
+
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>いろいろメモしていきますよ。
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

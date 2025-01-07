@@ -7,7 +7,6 @@
 
 # Site settings
 title: snjx.nksm
-# email: shinji-nakashima@wacom-it.co.jp
 description: > # this means to ignore newlines until "baseurl:"
   いろいろメモしていきますよ。
 baseurl: "" # the subpath of your site, e.g. /blog
@@ -30,8 +29,8 @@ paginate: 10
 include: ['_pages']
 
 gems:
-    - jemoji
-    - jekyll-redirect-from
-    - jekyll-sitemap
-    - jekyll-feed
-    - jekyll-paginate
+  - jemoji
+  - jekyll-redirect-from
+  - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-paginate
